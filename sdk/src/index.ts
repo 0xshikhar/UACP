@@ -8,6 +8,20 @@ export { UACPAgent } from './agent.js';
 export { A2AProtocol } from './a2a.js';
 export { AgentRegistry } from './registry.js';
 export { MessageRouter } from './router.js';
+export { OnChainAgentRegistry } from './onchain-registry.js';
+
+// Payment exports
+export {
+  UACPPaymentServer,
+  UACPPaymentClient,
+  createUACPPaymentRequirements,
+  isPaymentRequiredError,
+} from './x402.js';
+
+export type {
+  X402Config,
+  UACPPaymentRequirements,
+} from './x402.js';
 
 // Type exports
 export * from './types/index.js';

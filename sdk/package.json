@@ -31,7 +31,8 @@
     "zod": "^3.23.0",
     "eventemitter3": "^5.0.1",
     "uuid": "^10.0.0",
-    "axios": "^1.7.0"
+    "axios": "^1.7.0",
+    "a2a-x402": "file:../a2a-x402-typescript/x402_a2a"
   },
   "devDependencies": {
     "@types/node": "^20.14.0",
