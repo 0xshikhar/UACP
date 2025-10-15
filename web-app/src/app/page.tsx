@@ -8,19 +8,19 @@ export default function Home() {
       {/* PixelBlast Background */}
       <div className="absolute inset-0 z-0">
         <PixelBlast
-          variant="circle"
-          pixelSize={4}
+          variant="square"
+          pixelSize={3}
           color="#8B7355"
-          patternScale={1.5}
-          patternDensity={0.8}
+          patternScale={2}
+          patternDensity={1.2}
           enableRipples={true}
-          rippleIntensityScale={1.2}
-          rippleThickness={0.15}
-          rippleSpeed={0.4}
-          speed={0.3}
+          rippleIntensityScale={1.8}
+          rippleThickness={0.2}
+          rippleSpeed={0.5}
+          speed={0.4}
           transparent={true}
-          edgeFade={0.3}
-          className="opacity-60"
+          edgeFade={0.1}
+          className="opacity-80"
         />
       </div>
       

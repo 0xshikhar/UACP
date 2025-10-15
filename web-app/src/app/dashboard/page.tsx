@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
 import PixelBlast from "@/components/PixelBlast"
+import Footer from "@/components/Footer"
 
 const ConnectionCard = ({ 
   fromAgent, 
@@ -230,6 +231,9 @@ export default function DashboardPage() {
           </div>
         </div>
       </div>
+      
+      {/* Footer */}
+      <Footer />
     </main>
   )
 }

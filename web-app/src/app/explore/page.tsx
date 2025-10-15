@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
 import PixelBlast from "@/components/PixelBlast"
+import Footer from "@/components/Footer"
 
 const AgentBox = ({ 
   id, 
@@ -250,6 +251,9 @@ export default function ExplorePage() {
           </div>
         </div>
       </div>
+      
+      {/* Footer */}
+      <Footer />
     </main>
   )
 }
