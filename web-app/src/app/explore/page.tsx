@@ -1,5 +1,6 @@
 "use client"
 import React, { useState, useEffect } from 'react'
+import Link from 'next/link'
 import PixelBlast from "@/components/PixelBlast"
 
 const AgentBox = ({ 
@@ -204,20 +205,22 @@ export default function ExplorePage() {
           </div>
         </div>
 
-        {/* Agent Types Section */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
-          {agents.map((agent) => (
-            <div key={agent.id} className="bg-[#FFF8E7] border-2 border-black shadow-[6px_6px_0_0_rgba(0,0,0,1)] rounded-lg p-6 hover:shadow-[4px_4px_0_0_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] transition-all">
-              <div className="flex items-center justify-between mb-3">
-                <h3 className="text-black font-black text-lg">{agent.name}</h3>
-                <div className={`w-3 h-3 rounded-full ${agent.isConnected ? 'bg-[#8B7355]' : 'bg-[#D4A574]'}`}></div>
-              </div>
-              <p className="text-black/80 text-sm mb-4">{agent.status}</p>
-              <div className="text-xs text-[#8B7355] font-mono font-bold">
-                ID: {agent.id}
-              </div>
-            </div>
-          ))}
+        {/* Connection Interface */}
+        <div className="mb-12">
+          <h2 className="text-3xl font-black text-[#FFF8E7] mb-6 text-center drop-shadow-lg">
+            Connect Agents
+          </h2>
+          <div className="bg-[#FFF8E7] border-2 border-black shadow-[8px_8px_0_0_rgba(0,0,0,1)] rounded-lg p-8 max-w-4xl mx-auto text-center">
+            <p className="text-black text-lg mb-6 font-semibold">
+              Ready to connect agents and see them in action?
+            </p>
+            <Link 
+              href="/dashboard"
+              className="inline-block px-8 py-4 bg-[#8B7355] text-white border-2 border-black shadow-[6px_6px_0_0_rgba(0,0,0,1)] rounded-lg text-lg font-bold hover:shadow-[4px_4px_0_0_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] transition-all duration-200"
+            >
+              View Connected Agents Dashboard
+            </Link>
+          </div>
         </div>
 
         {/* Protocol Info */}
