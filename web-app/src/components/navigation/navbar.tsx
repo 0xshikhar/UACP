@@ -28,44 +28,9 @@ const Navbar = () => {
 					</div>
 				</Link>
 
-				{/* Desktop Search Bar - hidden on mobile */}
-				<div className="hidden md:flex flex-1 mx-4 max-w-[520px] items-center bg-[#363840] rounded-lg hover:bg-[#4c505c]">
-					<div className="text-[#8a939b] mx-3 font-bold text-lg">
-						<AiOutlineSearch />
-					</div>
-					<input
-						className="h-10 w-full border-0 bg-transparent outline-0 ring-0 px-2 pl-0 text-[#e6e8eb] placeholder:text-[#8a939b]"
-						type="text"
-						value={searchQuery}
-						onChange={(e) => setSearchQuery(e.target.value)}
-						placeholder="Enter Text"
-					/>
-					<button
-						onClick={() => {
-							if (searchQuery.trim()) {
-								router.push(`/searching/${searchQuery}`);
-							}
-						}}
-						className="text-white px-4 py-2"
-					>
-						Search
-					</button>
-				</div>
 
 				{/* Desktop Menu Items - hidden on mobile */}
 				<div className="hidden md:flex items-center">
-					<div
-						className="text-[#c8cacd] hover:text-white cursor-pointer px-4 font-bold"
-						onClick={() => router.push("/explore")}
-					>
-						Explore
-					</div>
-					<div
-						className="font-bold flex items-center text-[#8a939b] text-xl px-4 hover:text-white cursor-pointer"
-						onClick={() => router.push("/nft")}
-					>
-						<CgProfile className="mr-2" /> NFTProfile
-					</div>
 					<div className="text-[#c8cacd] hover:text-white text-xl cursor-pointer px-4 font-bold flex items-center"
 						onClick={() => router.push("/token")}
 					>
@@ -91,56 +56,18 @@ const Navbar = () => {
 			<div
 				className={cn(
 					"md:hidden absolute left-0 right-0 bg-black transition-all duration-300 ease-in-out overflow-hidden",
-					isMenuOpen ? "max-h-[500px] py-4" : "max-h-0"
+					isMenuOpen ? "max-h-[300px] py-4" : "max-h-0"
 				)}
 			>
-				{/* Mobile Search Bar */}
-				<div className="flex mx-4 my-3 items-center bg-[#363840] rounded-lg">
-					<div className="text-[#8a939b] mx-3 font-bold text-lg">
-						<AiOutlineSearch />
-					</div>
-					<input
-						className="h-10 w-full border-0 bg-transparent outline-0 ring-0 px-2 pl-0 text-[#e6e8eb] placeholder:text-[#8a939b]"
-						type="text"
-						value={searchQuery}
-						onChange={(e) => setSearchQuery(e.target.value)}
-						placeholder="Enter Text"
-					/>
-					<button
-						onClick={() => {
-							if (searchQuery.trim()) {
-								router.push(`/searching/${searchQuery}`);
-								setIsMenuOpen(false);
-							}
-						}}
-						className="text-white px-4 py-2"
-					>
-						Search
-					</button>
-				</div>
-
 				{/* Mobile Menu Items */}
 				<div className="flex flex-col px-4 space-y-4 pb-4">
-					<div
-						className="text-[#c8cacd] hover:text-white cursor-pointer font-bold py-2"
+					<div className="text-[#c8cacd] hover:text-white cursor-pointer font-bold py-2 flex items-center"
 						onClick={() => {
-							router.push("/explore");
+							router.push("/token");
 							setIsMenuOpen(false);
 						}}
 					>
-						Explore
-					</div>
-					<div
-						className="text-[#c8cacd] hover:text-white cursor-pointer font-bold py-2 flex items-center"
-						onClick={() => {
-							router.push("/nft");
-							setIsMenuOpen(false);
-						}}
-					>
-						<CgProfile className="mr-2" /> Profile
-					</div>
-					<div className="text-[#c8cacd] hover:text-white cursor-pointer font-bold py-2 flex items-center">
-						<MdOutlineAccountBalanceWallet className="mr-2" /> Wallet
+						<MdOutlineAccountBalanceWallet className="mr-2" /> Token
 					</div>
 					<div className="py-2">
 						<AuthButton />
