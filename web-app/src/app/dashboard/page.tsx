@@ -176,12 +176,6 @@ export default function DashboardPage() {
           <p className="text-xl text-[#D4A574] mb-4 max-w-3xl mx-auto drop-shadow-md">
             Monitor and manage agent connections in the A2A Protocol network
           </p>
-          <Link 
-            href="/explore"
-            className="inline-block px-6 py-3 bg-[#8B7355] text-white border-2 border-black shadow-[4px_4px_0_0_rgba(0,0,0,1)] rounded-lg font-bold hover:shadow-[3px_3px_0_0_rgba(0,0,0,1)] hover:translate-x-[1px] hover:translate-y-[1px] transition-all"
-          >
-            ← Back to Explore
-          </Link>
         </div>
 
         {/* Main Dashboard Grid */}
