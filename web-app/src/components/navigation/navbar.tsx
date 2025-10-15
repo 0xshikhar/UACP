@@ -32,9 +32,9 @@ const Navbar = () => {
 				{/* Desktop Menu Items - hidden on mobile */}
 				<div className="hidden md:flex items-center">
 					<div className="text-[#c8cacd] hover:text-white text-xl cursor-pointer px-4 font-bold flex items-center"
-						onClick={() => router.push("/token")}
+						onClick={() => router.push("/explore")}
 					>
-						<MdOutlineAccountBalanceWallet className="mr-2" /> Token
+						<MdOutlineAccountBalanceWallet className="mr-2" /> Explore
 					</div>
 					<div className="px-4">
 						<AuthButton />
@@ -63,11 +63,11 @@ const Navbar = () => {
 				<div className="flex flex-col px-4 space-y-4 pb-4">
 					<div className="text-[#c8cacd] hover:text-white cursor-pointer font-bold py-2 flex items-center"
 						onClick={() => {
-							router.push("/token");
+							router.push("/explore");
 							setIsMenuOpen(false);
 						}}
 					>
-						<MdOutlineAccountBalanceWallet className="mr-2" /> Token
+						<MdOutlineAccountBalanceWallet className="mr-2" /> Explore
 					</div>
 					<div className="py-2">
 						<AuthButton />

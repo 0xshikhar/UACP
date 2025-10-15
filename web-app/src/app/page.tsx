@@ -4,13 +4,13 @@ import PixelBlast from "@/components/PixelBlast"
 
 export default function Home() {
   return (
-    <main className="relative flex h-screen items-center justify-center overflow-hidden">
+    <main className="relative flex h-screen items-center justify-center overflow-hidden bg-black">
       {/* PixelBlast Background */}
       <div className="absolute inset-0 z-0">
         <PixelBlast
           variant="circle"
           pixelSize={3}
-          color="#B19EEF"
+          color="#8B7355"
           patternScale={2.5}
           patternDensity={1.2}
           enableRipples={true}
@@ -26,22 +26,22 @@ export default function Home() {
       
       {/* A2A Protocol Content */}
       <div className="relative z-10 flex flex-col items-center justify-center text-center px-8 max-w-4xl mx-auto">
-        <h1 className="text-6xl md:text-8xl font-bold text-white mb-6 tracking-tight drop-shadow-lg">
+        <h1 className="text-6xl md:text-8xl font-black text-[#FFF8E7] mb-6 tracking-tight drop-shadow-lg">
           A2A Protocol
         </h1>
         
-        <p className="text-xl md:text-2xl text-white mb-8 max-w-2xl leading-relaxed drop-shadow-md">
+        <p className="text-xl md:text-2xl text-[#D4A574] mb-8 max-w-2xl leading-relaxed drop-shadow-md">
           Agent-to-Agent Communication Protocol
         </p>
         
-        <p className="text-lg text-white/95 mb-8 max-w-3xl leading-relaxed drop-shadow-md">
+        <p className="text-lg text-[#FFF8E7]/90 mb-8 max-w-3xl leading-relaxed drop-shadow-md">
           A revolutionary protocol enabling seamless communication between autonomous agents. 
           Built for the future of decentralized AI interactions and smart contract automation.
         </p>
         
         {/* Pixelated Text */}
         <div className="mb-12">
-          <p className="text-sm text-white/70 font-mono tracking-wider drop-shadow-sm">
+          <p className="text-sm text-[#D4A574] font-mono tracking-wider drop-shadow-sm">
             [PIXELATED] DECENTRALIZED • AUTONOMOUS • FUTURE-READY [PIXELATED]
           </p>
         </div>
@@ -49,14 +49,14 @@ export default function Home() {
         <div className="flex flex-col sm:flex-row gap-6">
           <Link
             href="/token"
-            className="px-12 py-6 text-xl font-bold text-white border-2 border-white hover:bg-white hover:text-purple-600 transition-all duration-300 shadow-lg hover:shadow-xl"
+            className="px-12 py-6 text-xl font-bold text-white bg-[#8B7355] border-2 border-black shadow-[6px_6px_0_0_rgba(0,0,0,1)] hover:shadow-[4px_4px_0_0_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] transition-all duration-200"
           >
             Start Building
           </Link>
           
           <Link
-            href="/nft"
-            className="px-12 py-6 text-xl font-bold text-white border-2 border-white hover:bg-white hover:text-purple-600 transition-all duration-300 shadow-lg hover:shadow-xl"
+            href="/explore"
+            className="px-12 py-6 text-xl font-bold text-white bg-[#D4A574] border-2 border-black shadow-[6px_6px_0_0_rgba(0,0,0,1)] hover:shadow-[4px_4px_0_0_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] transition-all duration-200"
           >
             Explore Protocol
           </Link>

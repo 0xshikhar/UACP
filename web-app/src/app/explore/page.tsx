@@ -19,7 +19,7 @@ const AgentBox = ({
 }) => {
   return (
     <div 
-      className="absolute bg-black/80 border-2 border-purple-400 rounded-lg p-4 min-w-[200px] backdrop-blur-sm"
+      className="absolute bg-[#FFF8E7] border-2 border-black shadow-[6px_6px_0_0_rgba(0,0,0,1)] rounded-lg p-4 min-w-[200px]"
       style={{ 
         left: `${position.x}px`, 
         top: `${position.y}px`,
@@ -27,16 +27,16 @@ const AgentBox = ({
       }}
     >
       <div className="flex items-center justify-between mb-2">
-        <h3 className="text-white font-bold text-sm">{name}</h3>
-        <div className={`w-3 h-3 rounded-full ${isConnected ? 'bg-green-400' : 'bg-red-400'}`}></div>
+        <h3 className="text-black font-black text-sm">{name}</h3>
+        <div className={`w-3 h-3 rounded-full ${isConnected ? 'bg-[#8B7355]' : 'bg-[#D4A574]'}`}></div>
       </div>
-      <p className="text-gray-300 text-xs mb-3">{status}</p>
+      <p className="text-black/80 text-xs mb-3">{status}</p>
       <button
         onClick={onConnect}
-        className={`w-full py-2 px-3 text-xs font-semibold rounded transition-all ${
+        className={`w-full py-2 px-3 text-xs font-bold rounded transition-all border-2 border-black shadow-[3px_3px_0_0_rgba(0,0,0,1)] hover:shadow-[2px_2px_0_0_rgba(0,0,0,1)] hover:translate-x-[1px] hover:translate-y-[1px] ${
           isConnected 
-            ? 'bg-green-600 text-white hover:bg-green-700' 
-            : 'bg-purple-600 text-white hover:bg-purple-700'
+            ? 'bg-[#8B7355] text-white hover:bg-[#8B7355]/90' 
+            : 'bg-[#D4A574] text-white hover:bg-[#D4A574]/90'
         }`}
       >
         {isConnected ? 'Connected' : 'Connect'}
@@ -66,16 +66,16 @@ const ConnectionLine = ({
         left: `${from.x}px`,
         top: `${from.y}px`,
         width: `${length}px`,
-        height: '2px',
+        height: '3px',
         transform: `rotate(${angle}deg)`,
         background: isActive 
-          ? 'linear-gradient(90deg, #B19EEF, #8B5CF6, #B19EEF)'
+          ? 'linear-gradient(90deg, #8B7355, #D4A574, #8B7355)'
           : '#4B5563',
-        boxShadow: isActive ? '0 0 10px #B19EEF' : 'none'
+        boxShadow: isActive ? '0 0 8px #8B7355' : 'none'
       }}
     >
       {isActive && (
-        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent animate-pulse"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#FFF8E7] to-transparent animate-pulse"></div>
       )}
     </div>
   )
@@ -130,13 +130,13 @@ export default function ExplorePage() {
   }, [agents])
 
   return (
-    <main className="relative min-h-screen overflow-hidden">
+    <main className="relative min-h-screen bg-black overflow-hidden">
       {/* PixelBlast Background */}
       <div className="absolute inset-0 z-0">
         <PixelBlast
           variant="square"
           pixelSize={2}
-          color="#B19EEF"
+          color="#8B7355"
           patternScale={3}
           patternDensity={1.5}
           enableRipples={true}
@@ -154,13 +154,13 @@ export default function ExplorePage() {
       <div className="relative z-10 p-8">
         {/* Header */}
         <div className="text-center mb-12">
-          <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 drop-shadow-lg">
+          <h1 className="text-5xl md:text-7xl font-black text-[#FFF8E7] mb-6 drop-shadow-lg">
             Agent Network
           </h1>
-          <p className="text-xl text-white/90 mb-4 max-w-3xl mx-auto drop-shadow-md">
+          <p className="text-xl text-[#D4A574] mb-4 max-w-3xl mx-auto drop-shadow-md">
             Explore how autonomous agents connect and communicate in the A2A Protocol
           </p>
-          <p className="text-lg text-white/80 max-w-4xl mx-auto drop-shadow-md">
+          <p className="text-lg text-[#FFF8E7]/90 max-w-4xl mx-auto drop-shadow-md">
             Each agent represents a specialized function in the decentralized ecosystem. 
             Click on agents to establish connections and watch the network come alive.
           </p>
@@ -168,16 +168,16 @@ export default function ExplorePage() {
 
         {/* Demo Section */}
         <div className="mb-12">
-          <h2 className="text-3xl font-bold text-white mb-6 text-center drop-shadow-lg">
+          <h2 className="text-3xl font-black text-[#FFF8E7] mb-6 text-center drop-shadow-lg">
             Live Demo: Agent Connections
           </h2>
-          <div className="bg-black/40 backdrop-blur-sm border border-purple-400 rounded-lg p-6 max-w-4xl mx-auto">
-            <p className="text-white/90 text-center mb-6">
+          <div className="bg-[#FFF8E7] border-2 border-black shadow-[8px_8px_0_0_rgba(0,0,0,1)] rounded-lg p-6 max-w-4xl mx-auto">
+            <p className="text-black text-center mb-6 font-semibold">
               Click on any agent to connect it to the network. Watch as connections form between active agents.
             </p>
             
             {/* Network Visualization */}
-            <div className="relative h-[400px] bg-black/60 rounded-lg border border-purple-300 overflow-hidden">
+            <div className="relative h-[400px] bg-black rounded-lg border-2 border-black overflow-hidden">
               {/* Connection Lines */}
               {connections.map((conn, index) => (
                 <ConnectionLine
@@ -207,13 +207,13 @@ export default function ExplorePage() {
         {/* Agent Types Section */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
           {agents.map((agent) => (
-            <div key={agent.id} className="bg-black/60 backdrop-blur-sm border border-purple-400 rounded-lg p-6 hover:border-purple-300 transition-all">
+            <div key={agent.id} className="bg-[#FFF8E7] border-2 border-black shadow-[6px_6px_0_0_rgba(0,0,0,1)] rounded-lg p-6 hover:shadow-[4px_4px_0_0_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] transition-all">
               <div className="flex items-center justify-between mb-3">
-                <h3 className="text-white font-bold text-lg">{agent.name}</h3>
-                <div className={`w-3 h-3 rounded-full ${agent.isConnected ? 'bg-green-400' : 'bg-red-400'}`}></div>
+                <h3 className="text-black font-black text-lg">{agent.name}</h3>
+                <div className={`w-3 h-3 rounded-full ${agent.isConnected ? 'bg-[#8B7355]' : 'bg-[#D4A574]'}`}></div>
               </div>
-              <p className="text-gray-300 text-sm mb-4">{agent.status}</p>
-              <div className="text-xs text-purple-300 font-mono">
+              <p className="text-black/80 text-sm mb-4">{agent.status}</p>
+              <div className="text-xs text-[#8B7355] font-mono font-bold">
                 ID: {agent.id}
               </div>
             </div>
@@ -222,26 +222,26 @@ export default function ExplorePage() {
 
         {/* Protocol Info */}
         <div className="mt-16 text-center">
-          <div className="bg-black/60 backdrop-blur-sm border border-purple-400 rounded-lg p-8 max-w-4xl mx-auto">
-            <h3 className="text-2xl font-bold text-white mb-4 drop-shadow-lg">
+          <div className="bg-[#FFF8E7] border-2 border-black shadow-[8px_8px_0_0_rgba(0,0,0,1)] rounded-lg p-8 max-w-4xl mx-auto">
+            <h3 className="text-2xl font-black text-black mb-4">
               A2A Protocol Features
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-left">
               <div>
-                <h4 className="text-white font-semibold mb-2">Decentralized Communication</h4>
-                <p className="text-gray-300 text-sm">Agents communicate directly without central servers</p>
+                <h4 className="text-black font-black mb-2">Decentralized Communication</h4>
+                <p className="text-black/80 text-sm">Agents communicate directly without central servers</p>
               </div>
               <div>
-                <h4 className="text-white font-semibold mb-2">Smart Contract Integration</h4>
-                <p className="text-gray-300 text-sm">Seamless integration with blockchain smart contracts</p>
+                <h4 className="text-black font-black mb-2">Smart Contract Integration</h4>
+                <p className="text-black/80 text-sm">Seamless integration with blockchain smart contracts</p>
               </div>
               <div>
-                <h4 className="text-white font-semibold mb-2">Autonomous Operations</h4>
-                <p className="text-gray-300 text-sm">Self-managing agents with minimal human intervention</p>
+                <h4 className="text-black font-black mb-2">Autonomous Operations</h4>
+                <p className="text-black/80 text-sm">Self-managing agents with minimal human intervention</p>
               </div>
               <div>
-                <h4 className="text-white font-semibold mb-2">Cross-Chain Compatibility</h4>
-                <p className="text-gray-300 text-sm">Agents can operate across multiple blockchain networks</p>
+                <h4 className="text-black font-black mb-2">Cross-Chain Compatibility</h4>
+                <p className="text-black/80 text-sm">Agents can operate across multiple blockchain networks</p>
               </div>
             </div>
           </div>
