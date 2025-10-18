@@ -39,7 +39,9 @@ export const A2AMessageSchema = z.object({
   metadata: z.record(z.unknown()).optional(),
 });
 
-export type A2AMessage = z.infer<typeof A2AMessageSchema>;
+export type A2AMessage = z.infer<typeof A2AMessageSchema> & {
+  priority: MessagePriority;
+};
 
 /**
  * Message response structure

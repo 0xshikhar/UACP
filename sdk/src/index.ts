@@ -10,6 +10,14 @@ export { AgentRegistry } from './registry.js';
 export { MessageRouter } from './router.js';
 export { OnChainAgentRegistry } from './onchain-registry.js';
 
+// Orchestration exports
+export { AgentWorkflow } from './workflow.js';
+export { AgentOrchestrator } from './orchestrator.js';
+
+// Context exports
+export { ContextManager, ConversationContext } from './context.js';
+export type { SessionData, ContextStoreConfig } from './context.js';
+
 // Payment exports
 export {
   UACPPaymentServer,
