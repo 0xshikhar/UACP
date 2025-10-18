@@ -90,8 +90,8 @@ export class AgentInitializationError extends UACPError {
  * Intent handler error
  */
 export class IntentHandlerError extends UACPError {
-  constructor(intent: string, message: string, details?: unknown) {
-    super(message, 'INTENT_HANDLER_ERROR', { intent, ...details });
+  constructor(intent: string, message: string, details?: Record<string, unknown>) {
+    super(message, 'INTENT_HANDLER_ERROR', { intent, ...(details || {}) });
     this.name = 'IntentHandlerError';
   }
 }

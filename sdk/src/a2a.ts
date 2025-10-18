@@ -35,7 +35,7 @@ export class A2AProtocol {
       throw new MessageValidationError(`Invalid recipient DID: ${params.recipient}`);
     }
 
-    const message: A2AMessage = {
+    const message = {
       id: uuidv4(),
       timestamp: Date.now(),
       sender: this.senderId,
@@ -43,14 +43,14 @@ export class A2AProtocol {
       intent: params.intent,
       task: params.task,
       type: MessageType.REQUEST,
-      priority: params.priority || MessagePriority.MEDIUM,
-      context: params.context,
-      ttl: params.ttl,
-      correlationId: params.correlationId,
-      metadata: params.metadata,
+      priority: params.priority ?? MessagePriority.MEDIUM,
+      ...(params.context && { context: params.context }),
+      ...(params.ttl && { ttl: params.ttl }),
+      ...(params.correlationId && { correlationId: params.correlationId }),
+      ...(params.metadata && { metadata: params.metadata }),
     };
 
-    return this.validateMessage(message);
+    return this.validateMessage(message as A2AMessage);
   }
 
   /**
@@ -61,7 +61,7 @@ export class A2AProtocol {
     data: unknown,
     success = true
   ): A2AMessage {
-    const response: A2AMessage = {
+    const response = {
       id: uuidv4(),
       timestamp: Date.now(),
       sender: this.senderId,
@@ -71,10 +71,10 @@ export class A2AProtocol {
       type: MessageType.RESPONSE,
       priority: originalMessage.priority,
       correlationId: originalMessage.id,
-      context: originalMessage.context,
+      ...(originalMessage.context && { context: originalMessage.context }),
     };
 
-    return this.validateMessage(response);
+    return this.validateMessage(response as A2AMessage);
   }
 
   /**
@@ -85,7 +85,7 @@ export class A2AProtocol {
     error: string,
     code: string
   ): A2AMessage {
-    const response: A2AMessage = {
+    const response = {
       id: uuidv4(),
       timestamp: Date.now(),
       sender: this.senderId,
@@ -95,16 +95,16 @@ export class A2AProtocol {
       type: MessageType.ERROR,
       priority: originalMessage.priority,
       correlationId: originalMessage.id,
-      context: originalMessage.context,
+      ...(originalMessage.context && { context: originalMessage.context }),
     };
 
-    return this.validateMessage(response);
+    return this.validateMessage(response as A2AMessage);
   }
 
   /**
    * Validate a message against the schema
    */
-  validateMessage(message: A2AMessage): A2AMessage {
+  validateMessage(message: unknown): A2AMessage {
     try {
       return validate(A2AMessageSchema, message);
     } catch (error) {

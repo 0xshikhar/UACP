@@ -1,19 +1,11 @@
 import { Wallet } from 'ethers';
-import {
-  x402PaymentRequiredException,
-  x402ServerExecutor,
-  x402ClientExecutor,
+import type {
   PaymentRequirements,
   PaymentPayload,
-  processPayment,
-  verifyPayment,
-  settlePayment,
-  createPaymentRequirements,
-  x402Utils,
   VerifyResponse,
   SettleResponse,
   Task,
-} from 'a2a-x402';
+} from './types/a2a-x402.js';
 import { PaymentRequiredError } from './utils/errors.js';
 import { Logger } from './utils/logger.js';
 
@@ -46,14 +38,13 @@ export interface UACPPaymentRequirements {
 }
 
 /**
- * UACP Payment Server - Extends x402ServerExecutor for merchant/service provider agents
+ * UACP Payment Server - Wrapper for merchant/service provider agents
  */
-export class UACPPaymentServer extends x402ServerExecutor {
-  private config: X402Config;
+export class UACPPaymentServer {
+  private network: string;
 
   constructor(config: X402Config = {}) {
-    super();
-    this.config = config;
+    this.network = config.network || 'somnia';
     logger.info('Payment server initialized');
   }
 
@@ -67,9 +58,12 @@ export class UACPPaymentServer extends x402ServerExecutor {
     try {
       logger.debug('Verifying payment', { payload, requirements });
 
+      // Dynamic import to handle optional dependency
+      // @ts-expect-error - a2a-x402 is an optional peer dependency
+      const { verifyPayment } = await import('a2a-x402');
       const result = await verifyPayment(payload, requirements);
 
-      if (result.verified) {
+      if (result.success) {
         logger.info('Payment verified successfully', {
           transactionHash: payload.transactionHash,
           amount: payload.amount,
@@ -88,19 +82,17 @@ export class UACPPaymentServer extends x402ServerExecutor {
   /**
    * Settle payment on-chain
    */
-  async settlePayment(
-    payload: PaymentPayload,
-    requirements: PaymentRequirements
-  ): Promise<SettleResponse> {
+  async settlePayment(payload: PaymentPayload): Promise<SettleResponse> {
     try {
-      logger.debug('Settling payment', { payload, requirements });
+      logger.debug('Settling payment', { payload });
 
-      const result = await settlePayment(payload, requirements);
+      // Dynamic import to handle optional dependency
+      // @ts-expect-error - a2a-x402 is an optional peer dependency
+      const { settlePayment } = await import('a2a-x402');
+      const result = await settlePayment(payload);
 
-      if (result.settled) {
-        logger.info('Payment settled successfully', {
-          transactionHash: result.transactionHash,
-        });
+      if (result.success) {
+        logger.info('Payment settled successfully');
       } else {
         logger.warn('Payment settlement failed', result);
       }
@@ -115,18 +107,21 @@ export class UACPPaymentServer extends x402ServerExecutor {
   /**
    * Create payment requirements for a resource
    */
-  createPaymentRequirements(params: {
+  async createPaymentRequirements(params: {
     amount: string;
+    scheme?: string;
+    network?: string;
     asset: string;
     payTo: string;
     resource: string;
     description: string;
-    network?: string;
-    scheme?: 'exact' | 'range' | 'subscription';
-  }): PaymentRequirements {
+  }): Promise<PaymentRequirements> {
+    // @ts-expect-error - a2a-x402 is an optional peer dependency
+    const { createPaymentRequirements } = await import('a2a-x402');
+    
     return createPaymentRequirements({
       scheme: params.scheme || 'exact',
-      network: params.network || this.config.network || 'somnia',
+      network: params.network || this.network,
       asset: params.asset,
       payTo: params.payTo,
       maxAmountRequired: params.amount,
@@ -140,21 +135,20 @@ export class UACPPaymentServer extends x402ServerExecutor {
   /**
    * Throw payment required exception
    */
-  requirePayment(description: string, requirements: PaymentRequirements): never {
-    throw new x402PaymentRequiredException(description, requirements);
+  async requirePayment(requirements: PaymentRequirements): Promise<never> {
+    // @ts-expect-error - a2a-x402 is an optional peer dependency
+    const { x402PaymentRequiredException } = await import('a2a-x402');
+    throw new x402PaymentRequiredException(requirements);
   }
 }
 
 /**
- * UACP Payment Client - Extends x402ClientExecutor for client/orchestrator agents
+ * UACP Payment Client - Wrapper for client/orchestrator agents
  */
-export class UACPPaymentClient extends x402ClientExecutor {
-  private config: X402Config;
+export class UACPPaymentClient {
   private wallet?: Wallet;
 
   constructor(config: X402Config = {}) {
-    super();
-    this.config = config;
     this.wallet = config.wallet;
     logger.info('Payment client initialized');
   }
@@ -171,22 +165,21 @@ export class UACPPaymentClient extends x402ClientExecutor {
    * Handle payment required response
    */
   async handlePaymentRequired(
-    error: x402PaymentRequiredException,
-    task: Task
+    requirements: PaymentRequirements,
+    _task?: Task
   ): Promise<PaymentPayload> {
     if (!this.wallet) {
       throw new PaymentRequiredError(
         'Wallet not configured for payment processing',
-        error.paymentRequirements
+        requirements
       );
     }
 
     logger.info('Processing payment required', {
-      description: error.message,
-      amount: error.paymentRequirements.maxAmountRequired,
+      amount: requirements.maxAmountRequired,
     });
 
-    return await this.processPayment(error.paymentRequirements);
+    return await this.processPayment(requirements);
   }
 
   /**
@@ -200,6 +193,9 @@ export class UACPPaymentClient extends x402ClientExecutor {
     try {
       logger.debug('Processing payment', { requirements });
 
+      // Dynamic import to handle optional dependency
+      // @ts-expect-error - a2a-x402 is an optional peer dependency
+      const { processPayment } = await import('a2a-x402');
       const payload = await processPayment(requirements, this.wallet);
 
       logger.info('Payment processed successfully', {
@@ -213,47 +209,34 @@ export class UACPPaymentClient extends x402ClientExecutor {
       throw error;
     }
   }
-
-  /**
-   * Check if payment is required from task
-   */
-  isPaymentRequired(task: Task): boolean {
-    return x402Utils.isPaymentRequired(task);
-  }
-
-  /**
-   * Extract payment requirements from task
-   */
-  getPaymentRequirements(task: Task): PaymentRequirements | null {
-    return x402Utils.getPaymentRequirements(task);
-  }
-
-  /**
-   * Check if payment was successful
-   */
-  isPaymentSuccessful(task: Task): boolean {
-    return x402Utils.isPaymentSuccessful(task);
-  }
 }
 
 /**
  * Helper function to create payment requirements
  */
-export function createUACPPaymentRequirements(
+export async function createUACPPaymentRequirements(
   params: UACPPaymentRequirements
-): PaymentRequirements {
+): Promise<PaymentRequirements> {
+  // @ts-expect-error - a2a-x402 is an optional peer dependency
+  const { createPaymentRequirements } = await import('a2a-x402');
   return createPaymentRequirements(params);
 }
 
 /**
  * Helper to check if error is payment required
  */
-export function isPaymentRequiredError(error: unknown): error is x402PaymentRequiredException {
-  return error instanceof x402PaymentRequiredException;
+export async function isPaymentRequiredError(error: unknown): Promise<boolean> {
+  try {
+    // @ts-expect-error - a2a-x402 is an optional peer dependency
+    const { x402PaymentRequiredException } = await import('a2a-x402');
+    return error instanceof x402PaymentRequiredException;
+  } catch {
+    return false;
+  }
 }
 
 /**
- * Export x402 types and utilities
+ * Re-export types
  */
 export type {
   PaymentRequirements,
@@ -261,6 +244,4 @@ export type {
   VerifyResponse,
   SettleResponse,
   Task,
-} from 'a2a-x402';
-
-export { x402PaymentRequiredException, x402Utils } from 'a2a-x402';
+} from './types/a2a-x402.js';

@@ -24,19 +24,15 @@ const logger = new Logger({ level: 'info', prefix: 'Orchestrator' });
  * AgentOrchestrator - Executes multi-agent workflows
  */
 export class AgentOrchestrator {
-  private registry: AgentRegistry;
   private router: MessageRouter;
   private protocol: A2AProtocol;
   private eventEmitter: EventEmitter;
-  private senderId: string;
 
   constructor(
     senderId: string,
-    registry: AgentRegistry,
+    _registry: AgentRegistry,
     router: MessageRouter
   ) {
-    this.senderId = senderId;
-    this.registry = registry;
     this.router = router;
     this.protocol = new A2AProtocol(senderId);
     this.eventEmitter = new EventEmitter();
@@ -487,7 +483,7 @@ export class AgentOrchestrator {
   /**
    * Get workflow context
    */
-  getContext(workflowId: string): WorkflowContext | undefined {
+  getContext(_workflowId: string): WorkflowContext | undefined {
     // In future, this could retrieve from a context store
     return undefined;
   }

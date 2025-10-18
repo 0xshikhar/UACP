@@ -140,7 +140,7 @@ export class UACPAgent {
    */
   private setupRoutes(): void {
     // A2A message endpoint
-    this.app.post('/a2a', async (req: Request, res: Response) => {
+    this.app.post('/a2a', async (req: Request, res: Response): Promise<void> => {
       try {
         const message = req.body as A2AMessage;
 
@@ -157,12 +157,13 @@ export class UACPAgent {
 
         // Check if message is expired
         if (this.protocol.isMessageExpired(message)) {
-          return res.status(408).json(
+          res.status(408).json(
             A2AProtocol.createA2AResponse(message.id, false, undefined, {
               code: 'MESSAGE_EXPIRED',
               message: 'Message has expired',
             })
           );
+          return;
         }
 
         // Handle the message
@@ -186,7 +187,7 @@ export class UACPAgent {
     });
 
     // Health check endpoint
-    this.app.get('/health', (req: Request, res: Response) => {
+    this.app.get('/health', (_req: Request, res: Response) => {
       res.json({
         status: this.agentCard.status,
         agentId: this.agentCard.id,
@@ -196,7 +197,7 @@ export class UACPAgent {
     });
 
     // Agent card endpoint
-    this.app.get('/card', (req: Request, res: Response) => {
+    this.app.get('/card', (_req: Request, res: Response) => {
       res.json(this.agentCard);
     });
   }

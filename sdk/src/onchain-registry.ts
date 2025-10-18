@@ -38,7 +38,6 @@ export class OnChainAgentRegistry {
   private contract: Contract;
   private provider: Provider;
   private wallet?: Wallet;
-  private config: RegistryConfig;
 
   constructor(config: RegistryConfig, wallet?: Wallet) {
     if (!config.contractAddress) {
@@ -48,8 +47,6 @@ export class OnChainAgentRegistry {
     if (!config.rpcUrl) {
       throw new RegistryError('RPC URL is required for on-chain registry');
     }
-
-    this.config = config;
     this.provider = new ethers.JsonRpcProvider(config.rpcUrl);
 
     if (wallet) {

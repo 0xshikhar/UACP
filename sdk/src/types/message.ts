@@ -32,7 +32,7 @@ export const A2AMessageSchema = z.object({
   task: z.record(z.unknown()),
   context: z.string().optional().describe('Workflow or conversation context'),
   type: z.nativeEnum(MessageType),
-  priority: z.nativeEnum(MessagePriority).default(MessagePriority.MEDIUM),
+  priority: z.nativeEnum(MessagePriority),
   ttl: z.number().optional().describe('Time to live in seconds'),
   signature: z.string().optional(),
   correlationId: z.string().optional().describe('For request-response correlation'),
