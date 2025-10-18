@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { RefreshCw, TrendingUp, TrendingDown, DollarSign, Search, BarChart3 } from "lucide-react"
+import PixelBlast from "@/components/PixelBlast"
 
 interface TokenPrice {
   symbol: string
@@ -187,377 +188,437 @@ export default function AgentsPage() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="mb-8">
-        <h1 className="text-4xl font-bold mb-2">Agents Dashboard</h1>
-        <p className="text-muted-foreground">
-          Autonomous agents powered by A2A Protocol - Working together seamlessly
-        </p>
+    <main className="relative min-h-screen bg-black overflow-hidden">
+      {/* PixelBlast Background */}
+      <div className="absolute inset-0 z-0">
+        <PixelBlast
+          variant="square"
+          pixelSize={2}
+          color="#8B7355"
+          patternScale={3}
+          patternDensity={1.5}
+          enableRipples={true}
+          rippleIntensityScale={1.5}
+          rippleThickness={0.1}
+          rippleSpeed={0.3}
+          speed={0.2}
+          transparent={true}
+          edgeFade={0.2}
+          className="opacity-70"
+        />
       </div>
 
-      <Tabs defaultValue="price-agent" className="space-y-6">
-        <TabsList>
-          <TabsTrigger value="price-agent">Price Agent</TabsTrigger>
-          <TabsTrigger value="comparison-agent">Comparison Agent</TabsTrigger>
-          <TabsTrigger value="collaboration">Agent Collaboration</TabsTrigger>
-        </TabsList>
+      {/* Content */}
+      <div className="relative z-10 p-8">
+        {/* Header */}
+        <div className="text-center mb-12">
+          <h1 className="text-5xl md:text-7xl font-black text-[#FFF8E7] mb-6 drop-shadow-lg">
+            🤖 Agents Dashboard
+          </h1>
+          <p className="text-xl text-[#D4A574] mb-4 max-w-3xl mx-auto drop-shadow-md">
+            Autonomous agents powered by A2A Protocol - Working together seamlessly
+          </p>
+          <p className="text-lg text-[#FFF8E7]/90 max-w-4xl mx-auto drop-shadow-md">
+            Watch as our DeFiLlama Price Agent and Comparison Agent collaborate in real-time, 
+            demonstrating the power of agent-to-agent communication.
+          </p>
+        </div>
 
-        <TabsContent value="price-agent" className="space-y-6">
-          <Card>
-            <CardHeader>
-              <div className="flex items-center justify-between">
-                <div>
-                  <CardTitle className="flex items-center gap-2">
-                    <DollarSign className="h-5 w-5" />
-                    DeFiLlama Price Agent
-                  </CardTitle>
-                  <CardDescription>
-                    Real-time cryptocurrency price data from DeFiLlama APIs with custom ticker support
-                  </CardDescription>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Button
-                    onClick={() => fetchPriceData()}
-                    disabled={loading}
-                    variant="outline"
-                    size="sm"
-                  >
-                    <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
-                    Refresh All
-                  </Button>
-                  {lastUpdated && (
-                    <Badge variant="secondary">
-                      Updated {lastUpdated.toLocaleTimeString()}
-                    </Badge>
-                  )}
+        {/* Main Content Container */}
+        <div className="bg-[#FFF8E7] border-2 border-black shadow-[8px_8px_0_0_rgba(0,0,0,1)] rounded-lg p-8 max-w-6xl mx-auto">
+          <Tabs defaultValue="price-agent" className="space-y-6">
+            <TabsList className="bg-[#D4A574] border-2 border-black shadow-[4px_4px_0_0_rgba(0,0,0,1)] rounded-lg p-1">
+              <TabsTrigger 
+                value="price-agent" 
+                className="data-[state=active]:bg-[#8B7355] data-[state=active]:text-white border-2 border-black shadow-[2px_2px_0_0_rgba(0,0,0,1)] rounded-md font-bold"
+              >
+                💰 Price Agent
+              </TabsTrigger>
+              <TabsTrigger 
+                value="comparison-agent"
+                className="data-[state=active]:bg-[#8B7355] data-[state=active]:text-white border-2 border-black shadow-[2px_2px_0_0_rgba(0,0,0,1)] rounded-md font-bold"
+              >
+                📊 Comparison Agent
+              </TabsTrigger>
+              <TabsTrigger 
+                value="collaboration"
+                className="data-[state=active]:bg-[#8B7355] data-[state=active]:text-white border-2 border-black shadow-[2px_2px_0_0_rgba(0,0,0,1)] rounded-md font-bold"
+              >
+                🤝 Collaboration
+              </TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="price-agent" className="space-y-6">
+              {/* Price Agent Header */}
+              <div className="bg-[#D4A574] border-2 border-black shadow-[6px_6px_0_0_rgba(0,0,0,1)] rounded-lg p-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h2 className="text-2xl font-black text-black mb-2 flex items-center gap-2">
+                      💰 DeFiLlama Price Agent
+                    </h2>
+                    <p className="text-black/80 font-semibold">
+                      Real-time cryptocurrency price data from DeFiLlama APIs with custom ticker support
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Button
+                      onClick={() => fetchPriceData()}
+                      disabled={loading}
+                      className="bg-[#8B7355] hover:bg-[#8B7355]/90 text-white border-2 border-black shadow-[3px_3px_0_0_rgba(0,0,0,1)] hover:shadow-[2px_2px_0_0_rgba(0,0,0,1)] hover:translate-x-[1px] hover:translate-y-[1px] transition-all duration-200 font-bold"
+                    >
+                      <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
+                      Refresh All
+                    </Button>
+                    {lastUpdated && (
+                      <div className="bg-white border-2 border-black shadow-[3px_3px_0_0_rgba(0,0,0,1)] rounded-lg px-3 py-1">
+                        <span className="text-black text-sm font-bold">
+                          Updated {lastUpdated.toLocaleTimeString()}
+                        </span>
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
-            </CardHeader>
-            <CardContent className="space-y-4">
+
               {/* Custom Ticker Input */}
-              <div className="flex gap-2">
-                <div className="flex-1">
-                  <Label htmlFor="custom-ticker">Search Custom Token (e.g., usdc, wbtc, link)</Label>
-                  <Input
-                    id="custom-ticker"
-                    placeholder="Enter token symbol..."
-                    value={customTicker}
-                    onChange={(e) => setCustomTicker(e.target.value)}
-                    onKeyPress={(e) => e.key === 'Enter' && handleCustomTickerSearch()}
-                  />
+              <div className="bg-white border-2 border-black shadow-[6px_6px_0_0_rgba(0,0,0,1)] rounded-lg p-6">
+                <h3 className="text-xl font-black text-black mb-4">🔍 Search Custom Token</h3>
+                <div className="flex gap-3">
+                  <div className="flex-1">
+                    <Input
+                      placeholder="Enter token symbol (e.g., usdc, wbtc, link)..."
+                      value={customTicker}
+                      onChange={(e) => setCustomTicker(e.target.value)}
+                      onKeyPress={(e) => e.key === 'Enter' && handleCustomTickerSearch()}
+                      className="border-2 border-black shadow-[2px_2px_0_0_rgba(0,0,0,1)] rounded-md font-semibold"
+                    />
+                  </div>
+                  <Button 
+                    onClick={handleCustomTickerSearch} 
+                    disabled={loading || !customTicker.trim()}
+                    className="bg-[#D4A574] hover:bg-[#D4A574]/90 text-black border-2 border-black shadow-[3px_3px_0_0_rgba(0,0,0,1)] hover:shadow-[2px_2px_0_0_rgba(0,0,0,1)] hover:translate-x-[1px] hover:translate-y-[1px] transition-all duration-200 font-bold"
+                  >
+                    <Search className="h-4 w-4 mr-2" />
+                    Search
+                  </Button>
                 </div>
-                <Button onClick={handleCustomTickerSearch} disabled={loading || !customTicker.trim()}>
-                  <Search className="h-4 w-4 mr-2" />
-                  Search
-                </Button>
               </div>
 
+              {/* Error Display */}
               {error && (
-                <div className="p-4 border border-destructive/50 bg-destructive/10 rounded-lg">
-                  <p className="text-destructive">Error: {error}</p>
+                <div className="bg-red-100 border-2 border-red-500 shadow-[6px_6px_0_0_rgba(0,0,0,1)] rounded-lg p-4">
+                  <p className="text-red-800 font-bold">❌ Error: {error}</p>
                 </div>
               )}
 
+              {/* Loading State */}
               {loading && priceData.length === 0 ? (
-                <div className="flex items-center justify-center py-8">
-                  <RefreshCw className="h-6 w-6 animate-spin mr-2" />
-                  <span>Loading price data...</span>
+                <div className="flex items-center justify-center py-12 bg-white border-2 border-black shadow-[6px_6px_0_0_rgba(0,0,0,1)] rounded-lg">
+                  <RefreshCw className="h-8 w-8 animate-spin mr-3 text-[#8B7355]" />
+                  <span className="text-black font-bold text-lg">Loading price data...</span>
                 </div>
               ) : (
-                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                /* Token Cards */
+                <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                   {priceData.map((token, index) => (
-                    <Card key={index} className="hover:shadow-md transition-shadow">
-                      <CardContent className="p-4">
-                        <div className="flex items-center justify-between mb-3">
-                          <div className="flex items-center gap-2">
-                            {token.logoURI && (
-                              <img
-                                src={token.logoURI}
-                                alt={token.symbol}
-                                className="w-8 h-8 rounded-full"
-                                onError={(e) => {
-                                  e.currentTarget.style.display = 'none'
-                                }}
-                              />
-                            )}
-                            <div>
-                              <h3 className="font-semibold">{token.symbol}</h3>
-                              <p className="text-sm text-muted-foreground">{token.name}</p>
-                            </div>
+                    <div key={index} className="bg-white border-2 border-black shadow-[6px_6px_0_0_rgba(0,0,0,1)] rounded-lg p-6 hover:shadow-[8px_8px_0_0_rgba(0,0,0,1)] hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all duration-200">
+                      <div className="flex items-center justify-between mb-4">
+                        <div className="flex items-center gap-3">
+                          {token.logoURI && (
+                            <img
+                              src={token.logoURI}
+                              alt={token.symbol}
+                              className="w-10 h-10 rounded-full border-2 border-black"
+                              onError={(e) => {
+                                e.currentTarget.style.display = 'none'
+                              }}
+                            />
+                          )}
+                          <div>
+                            <h3 className="font-black text-black text-lg">{token.symbol}</h3>
+                            <p className="text-black/70 text-sm font-semibold">{token.name}</p>
                           </div>
-                          <Badge
-                            variant={token.priceChange24h >= 0 ? "default" : "destructive"}
-                            className="flex items-center gap-1"
-                          >
-                            {token.priceChange24h >= 0 ? (
-                              <TrendingUp className="h-3 w-3" />
-                            ) : (
-                              <TrendingDown className="h-3 w-3" />
-                            )}
+                        </div>
+                        <div className={`px-3 py-1 rounded-lg border-2 border-black shadow-[2px_2px_0_0_rgba(0,0,0,1)] flex items-center gap-1 ${
+                          token.priceChange24h >= 0 ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                        }`}>
+                          {token.priceChange24h >= 0 ? (
+                            <TrendingUp className="h-4 w-4" />
+                          ) : (
+                            <TrendingDown className="h-4 w-4" />
+                          )}
+                          <span className="font-bold">
                             {token.priceChange24h >= 0 ? '+' : ''}{token.priceChange24h.toFixed(2)}%
-                          </Badge>
+                          </span>
+                        </div>
+                      </div>
+                      
+                      <div className="space-y-3">
+                        <div className="flex justify-between items-center">
+                          <span className="text-black/70 font-semibold">Price</span>
+                          <span className="font-black text-black text-lg">{formatPrice(token.price)}</span>
                         </div>
                         
-                        <div className="space-y-2">
+                        {token.marketCap > 0 && (
                           <div className="flex justify-between items-center">
-                            <span className="text-sm text-muted-foreground">Price</span>
-                            <span className="font-semibold">{formatPrice(token.price)}</span>
+                            <span className="text-black/70 font-semibold">Market Cap</span>
+                            <span className="font-bold text-black">{formatMarketCap(token.marketCap)}</span>
                           </div>
-                          
-                          {token.marketCap > 0 && (
-                            <div className="flex justify-between items-center">
-                              <span className="text-sm text-muted-foreground">Market Cap</span>
-                              <span className="text-sm">{formatMarketCap(token.marketCap)}</span>
-                            </div>
-                          )}
-                          
-                          {token.volume24h > 0 && (
-                            <div className="flex justify-between items-center">
-                              <span className="text-sm text-muted-foreground">Volume 24h</span>
-                              <span className="text-sm">{formatVolume(token.volume24h)}</span>
-                            </div>
-                          )}
-                        </div>
-                      </CardContent>
-                    </Card>
+                        )}
+                        
+                        {token.volume24h > 0 && (
+                          <div className="flex justify-between items-center">
+                            <span className="text-black/70 font-semibold">Volume 24h</span>
+                            <span className="font-bold text-black">{formatVolume(token.volume24h)}</span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
                   ))}
                 </div>
               )}
 
               {priceData.length === 0 && !loading && !error && (
-                <div className="text-center py-8">
-                  <p className="text-muted-foreground">No price data available</p>
+                <div className="text-center py-12 bg-white border-2 border-black shadow-[6px_6px_0_0_rgba(0,0,0,1)] rounded-lg">
+                  <p className="text-black/70 font-bold text-lg">No price data available</p>
                 </div>
               )}
-            </CardContent>
-          </Card>
-        </TabsContent>
+            </TabsContent>
 
-        <TabsContent value="comparison-agent" className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <BarChart3 className="h-5 w-5" />
-                Price Comparison Agent
-              </CardTitle>
-              <CardDescription>
-                Enter any token symbol to get detailed 24hr price change analysis
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              {/* Token Input */}
-              <div className="flex gap-2">
-                <div className="flex-1">
-                  <Label htmlFor="comparison-token">Token Symbol</Label>
-                  <Input
-                    id="comparison-token"
-                    placeholder="Enter token symbol (e.g., BTC, ETH, ADA, SOL)..."
-                    value={comparisonToken}
-                    onChange={(e) => setComparisonToken(e.target.value)}
-                    onKeyPress={(e) => e.key === 'Enter' && handleComparisonSearch()}
-                  />
+            <TabsContent value="comparison-agent" className="space-y-6">
+              {/* Comparison Agent Header */}
+              <div className="bg-[#D4A574] border-2 border-black shadow-[6px_6px_0_0_rgba(0,0,0,1)] rounded-lg p-6">
+                <div>
+                  <h2 className="text-2xl font-black text-black mb-2 flex items-center gap-2">
+                    📊 Price Comparison Agent
+                  </h2>
+                  <p className="text-black/80 font-semibold">
+                    Enter any token symbol to get detailed 24hr price change analysis
+                  </p>
                 </div>
-                <Button onClick={handleComparisonSearch} disabled={comparisonLoading || !comparisonToken.trim()}>
-                  <Search className="h-4 w-4 mr-2" />
-                  Analyze
-                </Button>
               </div>
 
+              {/* Token Input */}
+              <div className="bg-white border-2 border-black shadow-[6px_6px_0_0_rgba(0,0,0,1)] rounded-lg p-6">
+                <h3 className="text-xl font-black text-black mb-4">🔍 Analyze Token</h3>
+                <div className="flex gap-3">
+                  <div className="flex-1">
+                    <Input
+                      placeholder="Enter token symbol (e.g., BTC, ETH, ADA, SOL)..."
+                      value={comparisonToken}
+                      onChange={(e) => setComparisonToken(e.target.value)}
+                      onKeyPress={(e) => e.key === 'Enter' && handleComparisonSearch()}
+                      className="border-2 border-black shadow-[2px_2px_0_0_rgba(0,0,0,1)] rounded-md font-semibold"
+                    />
+                  </div>
+                  <Button 
+                    onClick={handleComparisonSearch} 
+                    disabled={comparisonLoading || !comparisonToken.trim()}
+                    className="bg-[#D4A574] hover:bg-[#D4A574]/90 text-black border-2 border-black shadow-[3px_3px_0_0_rgba(0,0,0,1)] hover:shadow-[2px_2px_0_0_rgba(0,0,0,1)] hover:translate-x-[1px] hover:translate-y-[1px] transition-all duration-200 font-bold"
+                  >
+                    <Search className="h-4 w-4 mr-2" />
+                    Analyze
+                  </Button>
+                </div>
+              </div>
+
+              {/* Error Display */}
               {comparisonError && (
-                <div className="p-4 border border-destructive/50 bg-destructive/10 rounded-lg">
-                  <p className="text-destructive">Error: {comparisonError}</p>
+                <div className="bg-red-100 border-2 border-red-500 shadow-[6px_6px_0_0_rgba(0,0,0,1)] rounded-lg p-4">
+                  <p className="text-red-800 font-bold">❌ Error: {comparisonError}</p>
                 </div>
               )}
 
+              {/* Loading State */}
               {comparisonLoading && (
-                <div className="flex items-center justify-center py-8">
-                  <RefreshCw className="h-6 w-6 animate-spin mr-2" />
-                  <span>Analyzing token data...</span>
+                <div className="flex items-center justify-center py-12 bg-white border-2 border-black shadow-[6px_6px_0_0_rgba(0,0,0,1)] rounded-lg">
+                  <RefreshCw className="h-8 w-8 animate-spin mr-3 text-[#8B7355]" />
+                  <span className="text-black font-bold text-lg">Analyzing token data...</span>
                 </div>
               )}
 
+              {/* Comparison Results */}
               {comparisonData && (
-                <Card className="border-2 border-primary/20">
-                  <CardHeader>
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        {comparisonData.logoURI && (
-                          <img
-                            src={comparisonData.logoURI}
-                            alt={comparisonData.symbol}
-                            className="w-10 h-10 rounded-full"
-                            onError={(e) => {
-                              e.currentTarget.style.display = 'none'
-                            }}
-                          />
-                        )}
-                        <div>
-                          <CardTitle className="text-xl">{comparisonData.symbol}</CardTitle>
-                          <CardDescription>{comparisonData.name}</CardDescription>
-                        </div>
+                <div className="bg-white border-2 border-black shadow-[8px_8px_0_0_rgba(0,0,0,1)] rounded-lg p-6">
+                  <div className="flex items-center justify-between mb-6">
+                    <div className="flex items-center gap-4">
+                      {comparisonData.logoURI && (
+                        <img
+                          src={comparisonData.logoURI}
+                          alt={comparisonData.symbol}
+                          className="w-12 h-12 rounded-full border-2 border-black"
+                          onError={(e) => {
+                            e.currentTarget.style.display = 'none'
+                          }}
+                        />
+                      )}
+                      <div>
+                        <h3 className="text-2xl font-black text-black">{comparisonData.symbol}</h3>
+                        <p className="text-black/70 font-semibold">{comparisonData.name}</p>
                       </div>
-                      <Badge
-                        variant={comparisonData.priceChange24h >= 0 ? "default" : "destructive"}
-                        className="flex items-center gap-1 text-lg px-3 py-1"
-                      >
-                        {comparisonData.priceChange24h >= 0 ? (
-                          <TrendingUp className="h-4 w-4" />
-                        ) : (
-                          <TrendingDown className="h-4 w-4" />
-                        )}
+                    </div>
+                    <div className={`px-4 py-2 rounded-lg border-2 border-black shadow-[3px_3px_0_0_rgba(0,0,0,1)] flex items-center gap-2 ${
+                      comparisonData.priceChange24h >= 0 ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                    }`}>
+                      {comparisonData.priceChange24h >= 0 ? (
+                        <TrendingUp className="h-5 w-5" />
+                      ) : (
+                        <TrendingDown className="h-5 w-5" />
+                      )}
+                      <span className="font-black text-xl">
                         {comparisonData.priceChange24h >= 0 ? '+' : ''}{comparisonData.priceChange24h.toFixed(2)}%
-                      </Badge>
+                      </span>
                     </div>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                      <div className="text-center p-4 bg-muted/50 rounded-lg">
-                        <p className="text-sm text-muted-foreground mb-1">Current Price</p>
-                        <p className="text-2xl font-bold">{formatPrice(comparisonData.price)}</p>
-                      </div>
-                      
-                      <div className="text-center p-4 bg-muted/50 rounded-lg">
-                        <p className="text-sm text-muted-foreground mb-1">24h Change</p>
-                        <p className={`text-2xl font-bold ${comparisonData.priceChange24h >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                          {comparisonData.priceChange24h >= 0 ? '+' : ''}{comparisonData.priceChange24h.toFixed(2)}%
-                        </p>
-                      </div>
-                      
-                      <div className="text-center p-4 bg-muted/50 rounded-lg">
-                        <p className="text-sm text-muted-foreground mb-1">Market Cap</p>
-                        <p className="text-2xl font-bold">{formatMarketCap(comparisonData.marketCap)}</p>
-                      </div>
+                  </div>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div className="bg-[#FFF8E7] border-2 border-black shadow-[4px_4px_0_0_rgba(0,0,0,1)] rounded-lg p-4 text-center">
+                      <p className="text-black/70 font-semibold mb-2">Current Price</p>
+                      <p className="text-2xl font-black text-black">{formatPrice(comparisonData.price)}</p>
                     </div>
-                  </CardContent>
-                </Card>
+                    
+                    <div className="bg-[#FFF8E7] border-2 border-black shadow-[4px_4px_0_0_rgba(0,0,0,1)] rounded-lg p-4 text-center">
+                      <p className="text-black/70 font-semibold mb-2">24h Change</p>
+                      <p className={`text-2xl font-black ${comparisonData.priceChange24h >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                        {comparisonData.priceChange24h >= 0 ? '+' : ''}{comparisonData.priceChange24h.toFixed(2)}%
+                      </p>
+                    </div>
+                    
+                    <div className="bg-[#FFF8E7] border-2 border-black shadow-[4px_4px_0_0_rgba(0,0,0,1)] rounded-lg p-4 text-center">
+                      <p className="text-black/70 font-semibold mb-2">Market Cap</p>
+                      <p className="text-2xl font-black text-black">{formatMarketCap(comparisonData.marketCap)}</p>
+                    </div>
+                  </div>
+                </div>
               )}
 
               {!comparisonData && !comparisonLoading && !comparisonError && (
-                <div className="text-center py-8">
-                  <BarChart3 className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
-                  <p className="text-muted-foreground">Enter a token symbol to see detailed analysis</p>
+                <div className="text-center py-12 bg-white border-2 border-black shadow-[6px_6px_0_0_rgba(0,0,0,1)] rounded-lg">
+                  <BarChart3 className="h-16 w-16 mx-auto mb-4 text-[#8B7355]" />
+                  <p className="text-black/70 font-bold text-lg">Enter a token symbol to see detailed analysis</p>
                 </div>
               )}
-            </CardContent>
-          </Card>
-        </TabsContent>
+            </TabsContent>
 
-        <TabsContent value="collaboration" className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                🤝 Agent Collaboration
-              </CardTitle>
-              <CardDescription>
-                See how the Price Agent and Comparison Agent work together
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-6">
-                <div className="grid md:grid-cols-2 gap-6">
-                  {/* Price Agent Status */}
-                  <Card className="border-2 border-blue-200">
-                    <CardHeader>
-                      <CardTitle className="text-lg flex items-center gap-2">
-                        <DollarSign className="h-5 w-5 text-blue-600" />
-                        Price Agent Status
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="space-y-2">
-                        <div className="flex justify-between">
-                          <span>Active Tokens:</span>
-                          <Badge variant="secondary">{priceData.length}</Badge>
-                        </div>
-                        <div className="flex justify-between">
-                          <span>Last Updated:</span>
-                          <span className="text-sm">{lastUpdated?.toLocaleTimeString() || 'Never'}</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span>Status:</span>
-                          <Badge variant={error ? "destructive" : "default"}>
-                            {error ? "Error" : "Active"}
-                          </Badge>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
+            <TabsContent value="collaboration" className="space-y-6">
+              {/* Collaboration Header */}
+              <div className="bg-[#D4A574] border-2 border-black shadow-[6px_6px_0_0_rgba(0,0,0,1)] rounded-lg p-6">
+                <div>
+                  <h2 className="text-2xl font-black text-black mb-2 flex items-center gap-2">
+                    🤝 Agent Collaboration
+                  </h2>
+                  <p className="text-black/80 font-semibold">
+                    See how the Price Agent and Comparison Agent work together in real-time
+                  </p>
+                </div>
+              </div>
 
-                  {/* Comparison Agent Status */}
-                  <Card className="border-2 border-green-200">
-                    <CardHeader>
-                      <CardTitle className="text-lg flex items-center gap-2">
-                        <BarChart3 className="h-5 w-5 text-green-600" />
-                        Comparison Agent Status
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="space-y-2">
-                        <div className="flex justify-between">
-                          <span>Current Analysis:</span>
-                          <Badge variant="secondary">{comparisonData?.symbol || 'None'}</Badge>
-                        </div>
-                        <div className="flex justify-between">
-                          <span>24h Change:</span>
-                          <span className={`text-sm font-semibold ${comparisonData?.priceChange24h ? (comparisonData.priceChange24h >= 0 ? 'text-green-600' : 'text-red-600') : 'text-muted-foreground'}`}>
-                            {comparisonData?.priceChange24h ? `${comparisonData.priceChange24h >= 0 ? '+' : ''}${comparisonData.priceChange24h.toFixed(2)}%` : 'N/A'}
-                          </span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span>Status:</span>
-                          <Badge variant={comparisonError ? "destructive" : comparisonLoading ? "secondary" : "default"}>
-                            {comparisonError ? "Error" : comparisonLoading ? "Loading" : "Ready"}
-                          </Badge>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
+              <div className="grid md:grid-cols-2 gap-6">
+                {/* Price Agent Status */}
+                <div className="bg-white border-2 border-black shadow-[6px_6px_0_0_rgba(0,0,0,1)] rounded-lg p-6">
+                  <h3 className="text-xl font-black text-black mb-4 flex items-center gap-2">
+                    💰 Price Agent Status
+                  </h3>
+                  <div className="space-y-3">
+                    <div className="flex justify-between">
+                      <span className="font-semibold text-black">Active Tokens:</span>
+                      <span className="bg-[#D4A574] px-3 py-1 rounded-lg border-2 border-black shadow-[2px_2px_0_0_rgba(0,0,0,1)] font-bold text-black">
+                        {priceData.length}
+                      </span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="font-semibold text-black">Last Updated:</span>
+                      <span className="font-bold text-black">{lastUpdated?.toLocaleTimeString() || 'Never'}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="font-semibold text-black">Status:</span>
+                      <span className={`px-3 py-1 rounded-lg border-2 border-black shadow-[2px_2px_0_0_rgba(0,0,0,1)] font-bold ${
+                        error ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'
+                      }`}>
+                        {error ? "Error" : "Active"}
+                      </span>
+                    </div>
+                  </div>
                 </div>
 
-                {/* Collaboration Flow */}
-                <Card className="border-2 border-purple-200">
-                  <CardHeader>
-                    <CardTitle>🔄 Collaboration Flow</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-4">
-                      <div className="flex items-center gap-4">
-                        <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-                          <DollarSign className="h-4 w-4 text-blue-600" />
-                        </div>
-                        <div>
-                          <p className="font-semibold">Price Agent</p>
-                          <p className="text-sm text-muted-foreground">Fetches real-time price data from DeFiLlama APIs</p>
-                        </div>
-                      </div>
-                      
-                      <div className="flex items-center gap-4 ml-4">
-                        <div className="w-4 h-4 bg-purple-100 rounded-full flex items-center justify-center">
-                          <div className="w-2 h-2 bg-purple-600 rounded-full"></div>
-                        </div>
-                        <div>
-                          <p className="font-semibold">Data Sharing</p>
-                          <p className="text-sm text-muted-foreground">Shares price data with other agents via A2A Protocol</p>
-                        </div>
-                      </div>
-                      
-                      <div className="flex items-center gap-4 ml-4">
-                        <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
-                          <BarChart3 className="h-4 w-4 text-green-600" />
-                        </div>
-                        <div>
-                          <p className="font-semibold">Comparison Agent</p>
-                          <p className="text-sm text-muted-foreground">Analyzes specific tokens and provides detailed insights</p>
-                        </div>
-                      </div>
+                {/* Comparison Agent Status */}
+                <div className="bg-white border-2 border-black shadow-[6px_6px_0_0_rgba(0,0,0,1)] rounded-lg p-6">
+                  <h3 className="text-xl font-black text-black mb-4 flex items-center gap-2">
+                    📊 Comparison Agent Status
+                  </h3>
+                  <div className="space-y-3">
+                    <div className="flex justify-between">
+                      <span className="font-semibold text-black">Current Analysis:</span>
+                      <span className="bg-[#D4A574] px-3 py-1 rounded-lg border-2 border-black shadow-[2px_2px_0_0_rgba(0,0,0,1)] font-bold text-black">
+                        {comparisonData?.symbol || 'None'}
+                      </span>
                     </div>
-                  </CardContent>
-                </Card>
+                    <div className="flex justify-between">
+                      <span className="font-semibold text-black">24h Change:</span>
+                      <span className={`font-bold ${
+                        comparisonData?.priceChange24h ? 
+                          (comparisonData.priceChange24h >= 0 ? 'text-green-600' : 'text-red-600') : 
+                          'text-black/50'
+                      }`}>
+                        {comparisonData?.priceChange24h ? 
+                          `${comparisonData.priceChange24h >= 0 ? '+' : ''}${comparisonData.priceChange24h.toFixed(2)}%` : 
+                          'N/A'
+                        }
+                      </span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="font-semibold text-black">Status:</span>
+                      <span className={`px-3 py-1 rounded-lg border-2 border-black shadow-[2px_2px_0_0_rgba(0,0,0,1)] font-bold ${
+                        comparisonError ? 'bg-red-100 text-red-800' : 
+                        comparisonLoading ? 'bg-yellow-100 text-yellow-800' : 
+                        'bg-green-100 text-green-800'
+                      }`}>
+                        {comparisonError ? "Error" : comparisonLoading ? "Loading" : "Ready"}
+                      </span>
+                    </div>
+                  </div>
+                </div>
               </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-      </Tabs>
-    </div>
+
+              {/* Collaboration Flow */}
+              <div className="bg-white border-2 border-black shadow-[8px_8px_0_0_rgba(0,0,0,1)] rounded-lg p-6">
+                <h3 className="text-xl font-black text-black mb-6">🔄 Collaboration Flow</h3>
+                <div className="space-y-6">
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 bg-[#8B7355] rounded-full flex items-center justify-center border-2 border-black shadow-[3px_3px_0_0_rgba(0,0,0,1)]">
+                      <DollarSign className="h-6 w-6 text-white" />
+                    </div>
+                    <div>
+                      <p className="font-black text-black text-lg">Price Agent</p>
+                      <p className="text-black/70 font-semibold">Fetches real-time price data from DeFiLlama APIs</p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center gap-4 ml-6">
+                    <div className="w-6 h-6 bg-[#D4A574] rounded-full flex items-center justify-center border-2 border-black shadow-[2px_2px_0_0_rgba(0,0,0,1)]">
+                      <div className="w-3 h-3 bg-black rounded-full"></div>
+                    </div>
+                    <div>
+                      <p className="font-black text-black text-lg">Data Sharing</p>
+                      <p className="text-black/70 font-semibold">Shares price data with other agents via A2A Protocol</p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center gap-4 ml-6">
+                    <div className="w-12 h-12 bg-[#D4A574] rounded-full flex items-center justify-center border-2 border-black shadow-[3px_3px_0_0_rgba(0,0,0,1)]">
+                      <BarChart3 className="h-6 w-6 text-black" />
+                    </div>
+                    <div>
+                      <p className="font-black text-black text-lg">Comparison Agent</p>
+                      <p className="text-black/70 font-semibold">Analyzes specific tokens and provides detailed insights</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </TabsContent>
+          </Tabs>
+        </div>
+      </div>
+    </main>
   )
 }
