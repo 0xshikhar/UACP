@@ -35,6 +35,8 @@ export class A2AProtocol {
       throw new MessageValidationError(`Invalid recipient DID: ${params.recipient}`);
     }
 
+    const priority: MessagePriority = params.priority ?? MessagePriority.MEDIUM;
+    
     const message = {
       id: uuidv4(),
       timestamp: Date.now(),
@@ -43,14 +45,14 @@ export class A2AProtocol {
       intent: params.intent,
       task: params.task,
       type: MessageType.REQUEST,
-      priority: params.priority ?? MessagePriority.MEDIUM,
+      priority,
       ...(params.context && { context: params.context }),
       ...(params.ttl && { ttl: params.ttl }),
       ...(params.correlationId && { correlationId: params.correlationId }),
       ...(params.metadata && { metadata: params.metadata }),
     };
 
-    return this.validateMessage(message as A2AMessage);
+    return this.validateMessage(message);
   }
 
   /**
@@ -106,7 +108,7 @@ export class A2AProtocol {
    */
   validateMessage(message: unknown): A2AMessage {
     try {
-      return validate(A2AMessageSchema, message);
+      return validate(A2AMessageSchema, message) as A2AMessage;
     } catch (error) {
       logger.error('Message validation failed', error);
       throw error;
