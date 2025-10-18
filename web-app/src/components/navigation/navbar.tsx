@@ -36,6 +36,11 @@ const Navbar = () => {
 					>
 						<MdOutlineAccountBalanceWallet className="mr-2" /> Explore
 					</div>
+					<div className="text-[#c8cacd] hover:text-white text-xl cursor-pointer px-4 font-bold flex items-center"
+						onClick={() => router.push("/agents")}
+					>
+						🤖 Agents
+					</div>
 					<div className="px-4">
 						<AuthButton />
 					</div>
@@ -68,6 +73,14 @@ const Navbar = () => {
 						}}
 					>
 						<MdOutlineAccountBalanceWallet className="mr-2" /> Explore
+					</div>
+					<div className="text-[#c8cacd] hover:text-white cursor-pointer font-bold py-2 flex items-center"
+						onClick={() => {
+							router.push("/agents");
+							setIsMenuOpen(false);
+						}}
+					>
+						🤖 Agents
 					</div>
 					<div className="py-2">
 						<AuthButton />
