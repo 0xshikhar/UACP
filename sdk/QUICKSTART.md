@@ -23,27 +23,24 @@ This example demonstrates two agents communicating: an **Echo Agent** (server) a
 
 You **MUST** start the echo agent FIRST before running the client agent. The client agent will fail if the echo agent is not running.
 
-### Step 1: Start the Echo Agent (Server)
+### Step 1: Start the Registry Server
 
 **Open Terminal 1** and run:
 
 ```bash
-npx tsx examples/echo-agent.ts
+npx tsx examples/registry-server.ts
 ```
 
 You should see output like:
 
 ```
-[2025-10-24T...] [Registry] [INFO] Registry initialized
-[2025-10-24T...] [Agent] [INFO] Agent created: Echo Agent (did:somnia:echo-agent-001)
-[2025-10-24T...] [Agent] [INFO] Agent listening on port 4000
+🏛️  Initializing Registry Server...
 
-🚀 Echo Agent is running!
-📍 Endpoint: http://localhost:4000/a2a
-💚 Health: http://localhost:4000/health
-🎴 Card: http://localhost:4000/card
 
-✅ Ready to receive messages from client-agent.ts
+🏛️  Registry Server is running!
+📍 URL: http://localhost:3000
+💚 Health: http://localhost:3000/health
+📋 List agents: http://localhost:3000/registry/agents
 ```
 
 **✅ Keep this terminal running!** The echo agent must stay active.
@@ -54,30 +51,7 @@ You should see output like:
 
 Test health endpoint:
 ```bash
-curl http://localhost:4000/health
-```
-
-Get agent card:
-```bash
-curl http://localhost:4000/card
-```
-
-Send an echo message:
-```bash
-curl -X POST http://localhost:4000/a2a \
-  -H "Content-Type: application/json" \
-  -d '{
-    "id": "550e8400-e29b-41d4-a716-446655440000",
-    "timestamp": '$(date +%s000)',
-    "sender": "did:somnia:test-client",
-    "recipient": "did:somnia:echo-agent-001",
-    "intent": "echo",
-    "task": {
-      "message": "Hello, UACP!"
-    },
-    "type": "request",
-    "priority": "medium"
-  }'
+npx tsx examples/echo-agent-http.ts
 ```
 
 ### Step 3: Run the Client Agent
@@ -87,36 +61,35 @@ curl -X POST http://localhost:4000/a2a \
 **Open Terminal 3** (or use Terminal 2 if you skipped the optional test):
 
 ```bash
-npx tsx examples/client-agent.ts
+npx tsx examples/client-agent-http.ts
 ```
 
 You should see successful output:
 
 ```
-[2025-10-24T...] [Agent] [INFO] Agent created: Client Agent (did:somnia:client-agent-001)
-[2025-10-24T...] [Agent] [INFO] Agent listening on port 4001
-🚀 Client Agent is running on port 4001
 
-📤 Sending echo message...
-📥 Echo response: {
-  "success": true,
-  "data": {
-    "echo": "Hello from client agent!",
-    "receivedAt": 1234567890000,
-    "sender": "did:somnia:client-agent-001",
-    "message": "Echo: Hello from client agent!"
-  }
-}
+🚀 Client Agent is running with HTTP REGISTRY on port 4001
+🏛️  Registry: http://localhost:3000
 
-📤 Sending ping message...
-📥 Ping response: {
-  "success": true,
-  "data": {
-    "pong": true,
-    "timestamp": 1234567890000,
-    "message": "Pong!"
-  }
-}
+📋 Listing all agents in registry...
+Found 2 agents:
+  - Echo Agent (did:somnia:echo-agent-001) at http://localhost:4000
+  - Client Agent (did:somnia:client-agent-001) at http://localhost:4001
+
+📤 Sending echo message to did:somnia:echo-agent-001...
+   1. Looking up agent in HTTP registry...
+   2. Found agent at http://localhost:4000
+   3. Sending message...
+   4. Received response:
+      {
+        "success": true,
+        "data": {
+          "echo": "Hello from echo agent!",
+          "receivedAt": 1234567890000,
+          "sender": "did:somnia:echo-agent-001",
+          "message": "Echo: Hello from echo agent!"
+        }
+      }
 
 ✅ Client agent will keep running. Press Ctrl+C to exit.
 ```
