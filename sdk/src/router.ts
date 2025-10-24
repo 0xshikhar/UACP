@@ -30,7 +30,9 @@ export class MessageRouter {
 
     try {
       // Get recipient agent details
+      logger.info(`🔍 Looking up agent in registry: ${message.recipient}`);
       const recipient = await this.registry.getAgent(message.recipient);
+      logger.info(`✅ Found agent: ${recipient.name} at ${recipient.endpoint}`);
 
       logger.debug(`Routing message to ${recipient.name}`, {
         messageId: message.id,

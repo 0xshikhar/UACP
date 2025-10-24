@@ -1,10 +1,11 @@
 import { UACPAgent } from '../src/index.js';
+import { sharedRegistry } from './shared-registry.js';
 
 /**
  * Client agent that sends messages to other agents
  */
 async function main() {
-  // Create a client agent
+  // Create a client agent with shared registry
   const clientAgent = new UACPAgent({
     agentCard: {
       id: 'did:somnia:client-agent-001',
@@ -17,6 +18,7 @@ async function main() {
     },
     port: 4001,
     logLevel: 'info',
+    registry: sharedRegistry,
   });
 
   // Initialize the client agent

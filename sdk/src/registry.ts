@@ -89,8 +89,14 @@ export class AgentRegistry {
    * Get agent by ID
    */
   async getAgent(id: string): Promise<AgentCard> {
+    logger.debug(`Looking for agent: ${id}`);
+    logger.debug(`Registry has ${this.agents.size} agents:`, 
+      Array.from(this.agents.keys()));
+    
     const agent = this.agents.get(id);
     if (!agent) {
+      logger.error(`Agent not found: ${id}`);
+      logger.error(`Available agents: ${Array.from(this.agents.keys()).join(', ') || 'NONE'}`);
       throw new AgentNotFoundError(id);
     }
     return agent;

@@ -52,7 +52,7 @@ export class UACPAgent {
 
     // Initialize components
     this.protocol = new A2AProtocol(this.agentCard.id);
-    this.registry = new AgentRegistry({
+    this.registry = config.registry || new AgentRegistry({
       type: 'memory',
       url: config.registryUrl,
     });

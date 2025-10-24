@@ -15,47 +15,60 @@ npm install
 npm run build
 ```
 
-## Running Your First Agent
+## Running Your First Agent Interaction
 
-### Step 1: Start the Echo Agent
+This example demonstrates two agents communicating: an **Echo Agent** (server) and a **Client Agent**.
 
-Open a terminal and run:
+### ⚠️ IMPORTANT: Order Matters!
+
+You **MUST** start the echo agent FIRST before running the client agent. The client agent will fail if the echo agent is not running.
+
+### Step 1: Start the Echo Agent (Server)
+
+**Open Terminal 1** and run:
 
 ```bash
-npx tsx examples/simple-agent.ts
+npx tsx examples/echo-agent.ts
 ```
 
-You should see:
+You should see output like:
 
 ```
+[2025-10-24T...] [Registry] [INFO] Registry initialized
+[2025-10-24T...] [Agent] [INFO] Agent created: Echo Agent (did:somnia:echo-agent-001)
+[2025-10-24T...] [Agent] [INFO] Agent listening on port 4000
+
 🚀 Echo Agent is running!
 📍 Endpoint: http://localhost:4000/a2a
 💚 Health: http://localhost:4000/health
 🎴 Card: http://localhost:4000/card
+
+✅ Ready to receive messages from client-agent.ts
 ```
 
-### Step 2: Test the Agent
+**✅ Keep this terminal running!** The echo agent must stay active.
 
-In another terminal, test the health endpoint:
+### Step 2: Test the Echo Agent (Optional)
 
+**Open Terminal 2** to test the agent manually:
+
+Test health endpoint:
 ```bash
 curl http://localhost:4000/health
 ```
 
-Get the agent card:
-
+Get agent card:
 ```bash
 curl http://localhost:4000/card
 ```
 
-Send a message to the agent:
-
+Send an echo message:
 ```bash
 curl -X POST http://localhost:4000/a2a \
   -H "Content-Type: application/json" \
   -d '{
     "id": "550e8400-e29b-41d4-a716-446655440000",
-    "timestamp": 1234567890000,
+    "timestamp": '$(date +%s000)',
     "sender": "did:somnia:test-client",
     "recipient": "did:somnia:echo-agent-001",
     "intent": "echo",
@@ -69,13 +82,78 @@ curl -X POST http://localhost:4000/a2a \
 
 ### Step 3: Run the Client Agent
 
-In a third terminal:
+**Make sure Echo Agent (Terminal 1) is still running!**
+
+**Open Terminal 3** (or use Terminal 2 if you skipped the optional test):
 
 ```bash
 npx tsx examples/client-agent.ts
 ```
 
-This will automatically send messages to the echo agent and display the responses.
+You should see successful output:
+
+```
+[2025-10-24T...] [Agent] [INFO] Agent created: Client Agent (did:somnia:client-agent-001)
+[2025-10-24T...] [Agent] [INFO] Agent listening on port 4001
+🚀 Client Agent is running on port 4001
+
+📤 Sending echo message...
+📥 Echo response: {
+  "success": true,
+  "data": {
+    "echo": "Hello from client agent!",
+    "receivedAt": 1234567890000,
+    "sender": "did:somnia:client-agent-001",
+    "message": "Echo: Hello from client agent!"
+  }
+}
+
+📤 Sending ping message...
+📥 Ping response: {
+  "success": true,
+  "data": {
+    "pong": true,
+    "timestamp": 1234567890000,
+    "message": "Pong!"
+  }
+}
+
+✅ Client agent will keep running. Press Ctrl+C to exit.
+```
+
+### Troubleshooting
+
+#### Error: "Agent not found: did:somnia:echo-agent-001"
+
+**Problem:** The echo agent is not running.
+
+**Solution:** 
+1. Make sure you started `echo-agent.ts` in Step 1
+2. Check that Terminal 1 with the echo agent is still running
+3. If you closed it, restart the echo agent first
+
+#### Error: "EADDRINUSE: address already in use"
+
+**Problem:** Port 4000 or 4001 is already in use.
+
+**Solution:**
+```bash
+# Find what's using the port
+lsof -i :4000
+lsof -i :4001
+
+# Kill the process
+kill -9 <PID>
+```
+
+#### Connection Refused / Network Errors
+
+**Problem:** The agents can't communicate.
+
+**Solution:**
+1. Make sure both agents are running
+2. Check firewall settings
+3. Verify the ports are correct (4000 for echo, 4001 for client)
 
 ## Creating Your Own Agent
 
@@ -86,45 +164,50 @@ Create `my-agent.ts`:
 ```typescript
 import { UACPAgent, AgentEvent } from './src/index.js';
 
-const agent = new UACPAgent({
-  agentCard: {
-    id: 'did:somnia:my-custom-agent',
-    name: 'My Custom Agent',
-    description: 'Does amazing things',
-    endpoint: 'http://localhost:5000',
-    capabilities: ['custom_action'],
-    auth: { type: 'none' },
-    version: '1.0.0',
-  },
-  port: 5000,
-  logLevel: 'info',
-});
-
-// Add your custom logic
-agent.onIntent('custom_action', async (task, context) => {
-  console.log('Received task:', task);
-  
-  // Your business logic here
-  const result = await processTask(task);
-  
-  return {
-    success: true,
-    data: result,
-  };
-});
-
-async function processTask(task: any) {
-  // Your implementation
-  return { processed: true, data: task };
-}
-
-// Start the agent
 async function main() {
+  const agent = new UACPAgent({
+    agentCard: {
+      id: 'did:somnia:my-custom-agent',
+      name: 'My Custom Agent',
+      description: 'Does amazing things',
+      endpoint: 'http://localhost:5000',
+      capabilities: ['custom_action'],
+      auth: { type: 'none' },
+      version: '1.0.0',
+    },
+    port: 5000,
+    logLevel: 'info',
+  });
+
+  // Add your custom intent handler
+  agent.onIntent('custom_action', async (task, context) => {
+    console.log('Received task:', task);
+    
+    // Your business logic here
+    const result = await processTask(task);
+    
+    return {
+      success: true,
+      data: result,
+    };
+  });
+
+  // Listen to events
+  agent.on(AgentEvent.MESSAGE_RECEIVED, (message) => {
+    console.log('📨 Message received:', message);
+  });
+
+  // Start the agent
   await agent.initialize();
   await agent.register();
   await agent.listen();
   
-  console.log('✅ My Custom Agent is ready!');
+  console.log('✅ My Custom Agent is ready on port 5000!');
+}
+
+async function processTask(task: any) {
+  // Your implementation
+  return { processed: true, data: task };
 }
 
 main();
@@ -160,7 +243,7 @@ agent.onIntent('intent3', async (task, context) => {
 ### Pattern 2: Agent Communication Chain
 
 ```typescript
-// Agent A sends to Agent B, which sends to Agent C
+// Agent A sends to Agent B
 agent.onIntent('process', async (task, context) => {
   // Process locally
   const localResult = await processLocally(task);
@@ -195,33 +278,6 @@ agent.onIntent('risky_operation', async (task, context) => {
 });
 ```
 
-### Pattern 4: Payment Required
-
-```typescript
-agent.onIntent('premium_feature', async (task, context) => {
-  // Check if payment was provided
-  if (!context.payment) {
-    return {
-      success: false,
-      requiresPayment: true,
-      paymentRequirements: {
-        scheme: 'exact',
-        network: 'somnia',
-        asset: '0xUSDC_ADDRESS',
-        payTo: '0xYOUR_WALLET',
-        maxAmountRequired: '1000000',
-        resource: '/premium_feature',
-        description: 'Premium feature access',
-      },
-    };
-  }
-  
-  // Payment verified, provide service
-  const result = await providePremiumFeature(task);
-  return { success: true, data: result };
-});
-```
-
 ## Development Workflow
 
 ### 1. Development Mode
@@ -229,14 +285,14 @@ agent.onIntent('premium_feature', async (task, context) => {
 Run TypeScript directly without building:
 
 ```bash
-npx tsx examples/simple-agent.ts
+npx tsx examples/echo-agent.ts
 ```
 
 ### 2. Build and Run
 
 ```bash
 npm run build
-node dist/examples/simple-agent.js
+node dist/examples/echo-agent.js
 ```
 
 ### 3. Watch Mode
@@ -276,39 +332,24 @@ const response = await clientAgent.sendMessage({
 });
 ```
 
-## Troubleshooting
-
-### Port Already in Use
-
-Change the port in your agent config:
-
-```typescript
-port: 5000, // Use a different port
-```
-
-### Agent Not Found
-
-Make sure both agents are registered:
-
-```typescript
-await agent.register();
-```
-
-### Message Validation Errors
-
-Ensure your message follows the A2A format with all required fields.
-
-### Connection Refused
-
-Make sure the recipient agent is running and listening on the correct port.
-
 ## Next Steps
 
 1. **Add More Intents**: Expand your agent's capabilities
 2. **Implement Discovery**: Use the registry to find other agents
-3. **Add Payments**: Integrate X402 for paid services
+3. **Add Payments**: Integrate X402 for paid services (see `examples/payment-agent.ts`)
 4. **Deploy**: Deploy your agents to production
 5. **Monitor**: Add logging and monitoring
+
+## Example Files
+
+- `examples/echo-agent.ts` - Simple echo server agent
+- `examples/client-agent.ts` - Client that sends messages
+- `examples/simple-agent.ts` - Another echo agent example
+- `examples/payment-agent.ts` - Agent with X402 payments
+- `examples/payment-client.ts` - Client for payment testing
+- `examples/orchestrator-simple.ts` - Basic orchestrator
+- `examples/orchestrator-advanced.ts` - Advanced orchestration
+- `examples/orchestrator-defi.ts` - DeFi use case example
 
 ## Resources
 
