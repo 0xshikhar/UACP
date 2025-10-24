@@ -59,14 +59,12 @@ export class UACPPaymentServer {
       logger.debug('Verifying payment', { payload, requirements });
 
       // Dynamic import to handle optional dependency
-      // @ts-expect-error - a2a-x402 is an optional peer dependency
       const { verifyPayment } = await import('a2a-x402');
       const result = await verifyPayment(payload, requirements);
 
-      if (result.success) {
+      if (result.isValid) {
         logger.info('Payment verified successfully', {
-          transactionHash: payload.transactionHash,
-          amount: payload.amount,
+          payer: result.payer,
         });
       } else {
         logger.warn('Payment verification failed', result);
@@ -82,14 +80,16 @@ export class UACPPaymentServer {
   /**
    * Settle payment on-chain
    */
-  async settlePayment(payload: PaymentPayload): Promise<SettleResponse> {
+  async settlePayment(
+    payload: PaymentPayload,
+    requirements: PaymentRequirements
+  ): Promise<SettleResponse> {
     try {
       logger.debug('Settling payment', { payload });
 
       // Dynamic import to handle optional dependency
-      // @ts-expect-error - a2a-x402 is an optional peer dependency
       const { settlePayment } = await import('a2a-x402');
-      const result = await settlePayment(payload);
+      const result = await settlePayment(payload, requirements);
 
       if (result.success) {
         logger.info('Payment settled successfully');
@@ -116,29 +116,31 @@ export class UACPPaymentServer {
     resource: string;
     description: string;
   }): Promise<PaymentRequirements> {
-    // @ts-expect-error - a2a-x402 is an optional peer dependency
     const { createPaymentRequirements } = await import('a2a-x402');
     
-    return createPaymentRequirements({
-      scheme: params.scheme || 'exact',
-      network: params.network || this.network,
-      asset: params.asset,
-      payTo: params.payTo,
-      maxAmountRequired: params.amount,
+    const options: any = {
+      price: params.amount,
+      payToAddress: params.payTo,
       resource: params.resource,
+      network: params.network || this.network,
       description: params.description,
       mimeType: 'application/json',
+      scheme: params.scheme || 'exact',
       maxTimeoutSeconds: 1200,
-    });
+    };
+    
+    return createPaymentRequirements(options);
   }
 
   /**
    * Throw payment required exception
    */
   async requirePayment(requirements: PaymentRequirements): Promise<never> {
-    // @ts-expect-error - a2a-x402 is an optional peer dependency
     const { x402PaymentRequiredException } = await import('a2a-x402');
-    throw new x402PaymentRequiredException(requirements);
+    throw new x402PaymentRequiredException(
+      'Payment required',
+      requirements
+    );
   }
 }
 
@@ -194,13 +196,12 @@ export class UACPPaymentClient {
       logger.debug('Processing payment', { requirements });
 
       // Dynamic import to handle optional dependency
-      // @ts-expect-error - a2a-x402 is an optional peer dependency
       const { processPayment } = await import('a2a-x402');
       const payload = await processPayment(requirements, this.wallet);
 
       logger.info('Payment processed successfully', {
-        transactionHash: payload.transactionHash,
-        amount: payload.amount,
+        scheme: payload.scheme,
+        network: payload.network,
       });
 
       return payload;
@@ -217,9 +218,20 @@ export class UACPPaymentClient {
 export async function createUACPPaymentRequirements(
   params: UACPPaymentRequirements
 ): Promise<PaymentRequirements> {
-  // @ts-expect-error - a2a-x402 is an optional peer dependency
   const { createPaymentRequirements } = await import('a2a-x402');
-  return createPaymentRequirements(params);
+  
+  const options: any = {
+    price: params.maxAmountRequired,
+    payToAddress: params.payTo,
+    resource: params.resource,
+    network: params.network,
+    description: params.description,
+    mimeType: params.mimeType || 'application/json',
+    scheme: params.scheme,
+    maxTimeoutSeconds: params.maxTimeoutSeconds || 1200,
+  };
+  
+  return createPaymentRequirements(options);
 }
 
 /**
@@ -227,7 +239,6 @@ export async function createUACPPaymentRequirements(
  */
 export async function isPaymentRequiredError(error: unknown): Promise<boolean> {
   try {
-    // @ts-expect-error - a2a-x402 is an optional peer dependency
     const { x402PaymentRequiredException } = await import('a2a-x402');
     return error instanceof x402PaymentRequiredException;
   } catch {

@@ -47,6 +47,7 @@ export type AgentCard = z.infer<typeof AgentCardSchema>;
 export interface AgentConfig {
   agentCard: Omit<AgentCard, 'status' | 'createdAt' | 'updatedAt'>;
   registryUrl?: string;
+  registry?: any; // Optional shared registry instance
   port?: number;
   enablePayments?: boolean;
   walletPrivateKey?: string;
