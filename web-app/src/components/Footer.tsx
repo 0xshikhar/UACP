@@ -6,7 +6,7 @@ export default function Footer() {
       <div className="max-w-6xl mx-auto flex items-center justify-between">
         {/* Left side - Name */}
         <div className="text-[#FFF8E7] font-bold text-lg">
-          A2A Protocol
+         UACP
         </div>
         
         {/* Right side - Social links */}

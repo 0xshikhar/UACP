@@ -290,7 +290,7 @@ export default function AgentsPage() {
                       value={customTicker}
                       onChange={(e) => setCustomTicker(e.target.value)}
                       onKeyPress={(e) => e.key === 'Enter' && handleCustomTickerSearch()}
-                      className="border-2 border-black shadow-[2px_2px_0_0_rgba(0,0,0,1)] rounded-md font-semibold"
+                      className="border-2 border-black shadow-[2px_2px_0_0_rgba(0,0,0,1)] rounded-md font-semibold text-black"
                     />
                   </div>
                   <Button 
@@ -340,15 +340,15 @@ export default function AgentsPage() {
                           </div>
                         </div>
                         <div className={`px-3 py-1 rounded-lg border-2 border-black shadow-[2px_2px_0_0_rgba(0,0,0,1)] flex items-center gap-1 ${
-                          token.priceChange24h >= 0 ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                          (token.priceChange24h * 100) >= 0 ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
                         }`}>
-                          {token.priceChange24h >= 0 ? (
+                          {(token.priceChange24h * 100) >= 0 ? (
                             <TrendingUp className="h-4 w-4" />
                           ) : (
                             <TrendingDown className="h-4 w-4" />
                           )}
                           <span className="font-bold">
-                            {token.priceChange24h >= 0 ? '+' : ''}{token.priceChange24h.toFixed(2)}%
+                            {(token.priceChange24h * 100) >= 0 ? '+' : ''}{(token.priceChange24h * 100).toFixed(2)}%
                           </span>
                         </div>
                       </div>
@@ -408,7 +408,7 @@ export default function AgentsPage() {
                       value={comparisonToken}
                       onChange={(e) => setComparisonToken(e.target.value)}
                       onKeyPress={(e) => e.key === 'Enter' && handleComparisonSearch()}
-                      className="border-2 border-black shadow-[2px_2px_0_0_rgba(0,0,0,1)] rounded-md font-semibold"
+                      className="border-2 border-black shadow-[2px_2px_0_0_rgba(0,0,0,1)] rounded-md font-semibold text-black"
                     />
                   </div>
                   <Button 
@@ -458,20 +458,20 @@ export default function AgentsPage() {
                       </div>
                     </div>
                     <div className={`px-4 py-2 rounded-lg border-2 border-black shadow-[3px_3px_0_0_rgba(0,0,0,1)] flex items-center gap-2 ${
-                      comparisonData.priceChange24h >= 0 ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                      (comparisonData.priceChange24h * 100) >= 0 ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
                     }`}>
-                      {comparisonData.priceChange24h >= 0 ? (
+                      {(comparisonData.priceChange24h * 100) >= 0 ? (
                         <TrendingUp className="h-5 w-5" />
                       ) : (
                         <TrendingDown className="h-5 w-5" />
                       )}
                       <span className="font-black text-xl">
-                        {comparisonData.priceChange24h >= 0 ? '+' : ''}{comparisonData.priceChange24h.toFixed(2)}%
+                        {(comparisonData.priceChange24h * 100) >= 0 ? '+' : ''}{(comparisonData.priceChange24h * 100).toFixed(2)}%
                       </span>
                     </div>
                   </div>
                   
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="bg-[#FFF8E7] border-2 border-black shadow-[4px_4px_0_0_rgba(0,0,0,1)] rounded-lg p-4 text-center">
                       <p className="text-black/70 font-semibold mb-2">Current Price</p>
                       <p className="text-2xl font-black text-black">{formatPrice(comparisonData.price)}</p>
@@ -479,14 +479,9 @@ export default function AgentsPage() {
                     
                     <div className="bg-[#FFF8E7] border-2 border-black shadow-[4px_4px_0_0_rgba(0,0,0,1)] rounded-lg p-4 text-center">
                       <p className="text-black/70 font-semibold mb-2">24h Change</p>
-                      <p className={`text-2xl font-black ${comparisonData.priceChange24h >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                        {comparisonData.priceChange24h >= 0 ? '+' : ''}{comparisonData.priceChange24h.toFixed(2)}%
+                      <p className={`text-2xl font-black ${(comparisonData.priceChange24h * 100) >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                        {(comparisonData.priceChange24h * 100) >= 0 ? '+' : ''}{(comparisonData.priceChange24h * 100).toFixed(2)}%
                       </p>
-                    </div>
-                    
-                    <div className="bg-[#FFF8E7] border-2 border-black shadow-[4px_4px_0_0_rgba(0,0,0,1)] rounded-lg p-4 text-center">
-                      <p className="text-black/70 font-semibold mb-2">Market Cap</p>
-                      <p className="text-2xl font-black text-black">{formatMarketCap(comparisonData.marketCap)}</p>
                     </div>
                   </div>
                 </div>
@@ -557,11 +552,11 @@ export default function AgentsPage() {
                       <span className="font-semibold text-black">24h Change:</span>
                       <span className={`font-bold ${
                         comparisonData?.priceChange24h ? 
-                          (comparisonData.priceChange24h >= 0 ? 'text-green-600' : 'text-red-600') : 
+                          ((comparisonData.priceChange24h * 100) >= 0 ? 'text-green-600' : 'text-red-600') : 
                           'text-black/50'
                       }`}>
                         {comparisonData?.priceChange24h ? 
-                          `${comparisonData.priceChange24h >= 0 ? '+' : ''}${comparisonData.priceChange24h.toFixed(2)}%` : 
+                          `${(comparisonData.priceChange24h * 100) >= 0 ? '+' : ''}${(comparisonData.priceChange24h * 100).toFixed(2)}%` : 
                           'N/A'
                         }
                       </span>
