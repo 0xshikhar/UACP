@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { v4 as uuidv4 } from 'uuid';
 
 /**
  * Client Agent - Direct Communication (No Registry)
@@ -15,7 +16,7 @@ async function main() {
     console.log('📤 Sending echo message directly to http://localhost:4000/a2a...');
     
     const echoMessage = {
-      id: `msg-${Date.now()}-1`,
+      id: uuidv4(),
       timestamp: Date.now(),
       sender: 'did:somnia:client-agent-001',
       recipient: 'did:somnia:echo-agent-001',
@@ -38,7 +39,7 @@ async function main() {
     console.log('\n📤 Sending ping message directly...');
     
     const pingMessage = {
-      id: `msg-${Date.now()}-2`,
+      id: uuidv4(),
       timestamp: Date.now(),
       sender: 'did:somnia:client-agent-001',
       recipient: 'did:somnia:echo-agent-001',
