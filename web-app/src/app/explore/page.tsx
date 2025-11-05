@@ -120,15 +120,15 @@ export default function ExplorePage() {
   }
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setConnections(prev => prev.map(conn => ({
+    // Recompute connection activity whenever the agents change
+    setConnections(prev => prev.map(conn => {
+      const fromConnected = agents.find(a => a.id === conn.from)?.isConnected ?? false
+      const toConnected = agents.find(a => a.id === conn.to)?.isConnected ?? false
+      return {
         ...conn,
-        isActive: agents.find(a => a.id === conn.from)?.isConnected && 
-                 agents.find(a => a.id === conn.to)?.isConnected
-      })))
-    }, 100)
-
-    return () => clearInterval(interval)
+        isActive: fromConnected && toConnected,
+      }
+    }))
   }, [agents])
 
   return (
