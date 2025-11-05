@@ -232,14 +232,6 @@ npx tsx examples/orchestrator-defi.ts
 
 ---
 
-## 11. Team
-
-**0xShikhar**
-- 15 years full-stack development
-- Web3 builder and hackathon winner
-- TypeScript expert
-
----
 
 ## 12. Ask
 
