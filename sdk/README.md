@@ -204,6 +204,10 @@ Check the `examples/` directory for complete examples:
 
 - `simple-agent.ts` - Basic echo agent
 - `client-agent.ts` - Client that sends messages
+- `payment-agent.ts` - Merchant/service agent exposing free/premium endpoints
+- `payment-client.ts` - Client that handles 402 and prepares X402 payloads
+- `settlement-service.ts` - End-to-end X402 verify + settle + on-chain log to `UACPEvents`
+- `onchain-registry-mainnet.ts` - Register/update/query agents on Somnia on-chain `AgentRegistry`
 
 ### Running Examples
 
@@ -214,6 +218,19 @@ npx tsx examples/simple-agent.ts
 
 # Terminal 2: Start the client agent
 npx tsx examples/client-agent.ts
+
+# Settlement + On-chain Registry (requires env)
+# Set the following before running:
+#   export SOMNIA_RPC_URL=...
+#   export SOMNIA_UACP_EVENTS=0x...
+#   export SOMNIA_AGENT_REGISTRY=0x...
+#   export PRIVATE_KEY=0x...
+
+# X402 Settlement and UACPEvents logging
+npx tsx examples/settlement-service.ts
+
+# On-chain registry usage on Somnia
+npx tsx examples/onchain-registry-mainnet.ts
 ```
 
 ## API Reference
@@ -339,10 +356,10 @@ npm run format
 - [x] Agent registry and discovery
 - [x] Message routing with retry
 - [x] Circuit breaker pattern
-- [ ] X402 payment integration
-- [ ] On-chain registry (Somnia)
+- [x] X402 payment integration
+- [x] On-chain registry (Somnia)
+- [x] Agent orchestration
 - [ ] WebSocket support for streaming
-- [ ] Agent orchestration
 - [ ] Multi-chain support
 
 ## Contributing
