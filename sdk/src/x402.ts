@@ -1,4 +1,5 @@
 import { Wallet } from 'ethers';
+import { X402SettlementService } from './settlement.js';
 import type {
   PaymentRequirements,
   PaymentPayload,
@@ -19,6 +20,7 @@ export interface X402Config {
   network?: string;
   rpcUrl?: string;
   facilitatorUrl?: string;
+  uacpEventsAddress?: string;
 }
 
 /**
@@ -46,6 +48,44 @@ export class UACPPaymentServer {
   constructor(config: X402Config = {}) {
     this.network = config.network || 'somnia';
     logger.info('Payment server initialized');
+  }
+
+  /**
+   * Verify, settle, and record payment to UACPEvents in one call
+   */
+  async verifySettleAndRecord(
+    payload: PaymentPayload,
+    requirements: PaymentRequirements,
+    opts: {
+      messageId: string;
+      asset: string;
+      amount: string; // integer string or decimal when amountDecimals provided
+      amountDecimals?: number;
+      from: string;
+      to: string;
+      rpcUrl: string;
+      uacpEventsAddress: string;
+      wallet?: Wallet;
+      privateKey?: string;
+    }
+  ): Promise<{ success: boolean; txHash?: string; verify: VerifyResponse; settlement?: SettleResponse }> {
+    const settlement = new X402SettlementService({
+      rpcUrl: opts.rpcUrl,
+      uacpEventsAddress: opts.uacpEventsAddress,
+      wallet: opts.wallet,
+      privateKey: opts.privateKey,
+    });
+
+    return settlement.settleAndRecord({
+      requirements,
+      payload,
+      messageId: opts.messageId,
+      asset: opts.asset,
+      amount: opts.amount,
+      amountDecimals: opts.amountDecimals,
+      from: opts.from,
+      to: opts.to,
+    });
   }
 
   /**

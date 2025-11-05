@@ -10,6 +10,8 @@ export { HTTPRegistryClient } from './registry-http.js';
 export { MessageRouter } from './router.js';
 export { A2AProtocol } from './a2a.js';
 export { OnChainAgentRegistry } from './onchain-registry.js';
+export { X402SettlementService } from './settlement.js';
+export { somniaMainnet, getProvider, getWallet } from './networks.js';
 
 // Orchestration exports
 export { AgentWorkflow } from './workflow.js';
