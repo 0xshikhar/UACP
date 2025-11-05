@@ -21,14 +21,14 @@ Wait for: `✅ Ready to receive messages`
 ### Terminal 2: Direct Client
 ```bash
 cd /Users/shikharsingh/Downloads/code/somania/uacp/sdk
-npx tsx examples/client-agent-direct.ts
+npx tsx examples/client-agent.ts
 ```
 
 ## Expected Output
 
 ### ✅ SUCCESS:
 ```
-🚀 Starting client with DIRECT communication
+🚀 Client Agent is running on port 4001 (DIRECT A2A)
 
 📤 Sending echo message directly to http://localhost:4000/a2a...
 📥 Echo response: {
@@ -71,13 +71,8 @@ await clientAgent.sendMessage({
 
 ### New Way (Works):
 ```typescript
-// Direct HTTP POST to known endpoint
-await axios.post('http://localhost:4000/a2a', {
-  sender: 'did:somnia:client-agent-001',
-  recipient: 'did:somnia:echo-agent-001',
-  intent: 'echo',
-  task: { message: 'Hello!' },
-});
+// examples/client-agent.ts does this for you using axios + UUID ids
+// You can also run the lower-level version in examples/client-agent-direct.ts
 ```
 
 ## Why No Registry?
@@ -105,3 +100,8 @@ See `ARCHITECTURE-EXPLAINED.md` for how to set up:
 ---
 
 **Test this now!** It will work immediately without any registry issues.
+
+---
+
+Alternative direct client:
+- `examples/client-agent-direct.ts` shows the raw HTTP POST building A2A messages with UUIDs.

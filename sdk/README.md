@@ -202,8 +202,13 @@ const allAgents = await registry.listAgents();
 
 Check the `examples/` directory for complete examples:
 
-- `simple-agent.ts` - Basic echo agent
-- `client-agent.ts` - Client that sends messages
+- `simple-agent.ts` - Basic echo agent (can be used with direct client)
+- `echo-agent.ts` - Echo agent for direct A2A
+- `client-agent.ts` - Direct A2A client (no registry)
+- `client-agent-direct.ts` - Low-level direct client using axios + UUIDs
+- `echo-agent-http.ts` - Echo agent with HTTP Registry
+- `client-agent-http.ts` - Client that discovers via HTTP Registry
+- `registry-server.ts` - HTTP Registry server for discovery
 - `payment-agent.ts` - Merchant/service agent exposing free/premium endpoints
 - `payment-client.ts` - Client that handles 402 and prepares X402 payloads
 - `settlement-service.ts` - End-to-end X402 verify + settle + on-chain log to `UACPEvents`
@@ -211,20 +216,35 @@ Check the `examples/` directory for complete examples:
 
 ### Running Examples
 
+Direct A2A (no registry):
 ```bash
 # Terminal 1: Start the echo agent
 npm run dev
-npx tsx examples/simple-agent.ts
+npx tsx examples/echo-agent.ts   # or: npx tsx examples/simple-agent.ts
 
-# Terminal 2: Start the client agent
+# Terminal 2: Start the direct client
 npx tsx examples/client-agent.ts
+```
 
-# Settlement + On-chain Registry (requires env)
+HTTP Registry (discovery):
+```bash
+# Terminal 1: Start the registry server
+npx tsx examples/registry-server.ts
+
+# Terminal 2: Start the echo agent (HTTP Registry)
+npx tsx examples/echo-agent-http.ts
+
+# Terminal 3: Start the client (HTTP Registry)
+npx tsx examples/client-agent-http.ts
+```
+
+Settlement + On-chain Registry (requires env):
+```bash
 # Set the following before running:
-#   export SOMNIA_RPC_URL=...
-#   export SOMNIA_UACP_EVENTS=0x...
-#   export SOMNIA_AGENT_REGISTRY=0x...
-#   export PRIVATE_KEY=0x...
+export SOMNIA_RPC_URL=...
+export SOMNIA_UACP_EVENTS=0x...
+export SOMNIA_AGENT_REGISTRY=0x...
+export PRIVATE_KEY=0x...
 
 # X402 Settlement and UACPEvents logging
 npx tsx examples/settlement-service.ts
