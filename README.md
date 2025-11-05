@@ -312,6 +312,7 @@ MIT
 ## 👥 Team
 
 **0xShikhar** — Protocol & SDK Development
+
 **Ayush** — Full stack Developer
 
 ---
@@ -321,7 +322,7 @@ MIT
 - **Somnia**: https://somnia.network
 - **Google A2A**: https://github.com/google/A2A
 - **Coinbase X402**: https://x402.org
-- **GitHub**: https://github.com/yourusername/uacp
+- **GitHub**: https://github.com/0xshikhar/uacp
 
 ---
 
