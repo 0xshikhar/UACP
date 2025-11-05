@@ -237,16 +237,17 @@ agent.onIntent('premium', async (task) => {
 - ✅ HTTP registry server
 - ✅ Multi-agent orchestration
 - ✅ Test agents and examples
+- ✅ X402 end-to-end on-chain settlement
+- ✅ On-chain registry on Somnia mainnet
 
 ### **Phase 2: Production ( Q4 2025)**
-- [ ] X402 end-to-end on-chain settlement
-- [ ] On-chain registry on Somnia mainnet
+
 - [ ] WebSocket transport for streaming
 - [ ] Agent reputation system
 - [ ] Multi-chain support
+- [ ] Pre-built strategy packs (DCA, LP rebalance, TWAP)
 
 ### **Phase 3: DeFi Strategies ( Q1 2026)**
-- [ ] Pre-built strategy packs (DCA, LP rebalance, TWAP)
 - [ ] Risk/compliance agent templates
 - [ ] MEV protection agents
 - [ ] Cross-chain bridge agents
