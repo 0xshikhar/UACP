@@ -43,7 +43,6 @@ export class OnChainAgentRegistry {
     if (!config.contractAddress) {
       throw new RegistryError('Contract address is required for on-chain registry');
     }
-
     if (!config.rpcUrl) {
       throw new RegistryError('RPC URL is required for on-chain registry');
     }
@@ -60,6 +59,38 @@ export class OnChainAgentRegistry {
       contractAddress: config.contractAddress,
       chainId: config.chainId,
     });
+  }
+
+  /**
+   * Convenience factory: build registry from environment variables
+   * Required env:
+   * - SOMNIA_RPC_URL
+   * - SOMNIA_AGENT_REGISTRY
+   * Optional:
+   * - PRIVATE_KEY (signer)
+   * - SOMNIA_CHAIN_ID
+   */
+  static fromEnv(): OnChainAgentRegistry {
+    const rpcUrl = process.env.SOMNIA_RPC_URL || '';
+    const contractAddress = process.env.SOMNIA_AGENT_REGISTRY || '';
+    const chainId = process.env.SOMNIA_CHAIN_ID ? Number(process.env.SOMNIA_CHAIN_ID) : undefined;
+    const pk = process.env.PRIVATE_KEY;
+
+    if (!rpcUrl) throw new RegistryError('SOMNIA_RPC_URL is required');
+    if (!contractAddress) throw new RegistryError('SOMNIA_AGENT_REGISTRY is required');
+
+    const provider = new ethers.JsonRpcProvider(rpcUrl);
+    const signer = pk ? new Wallet(pk, provider) : undefined;
+
+    return new OnChainAgentRegistry(
+      {
+        type: 'onchain',
+        rpcUrl,
+        contractAddress,
+        chainId,
+      },
+      signer
+    );
   }
 
   /**
