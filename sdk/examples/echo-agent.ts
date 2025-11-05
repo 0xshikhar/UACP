@@ -1,12 +1,11 @@
 import { UACPAgent, AgentEvent } from '../src/index.js';
-import { sharedRegistry } from './shared-registry.js';
 
 /**
  * Echo Agent - responds to echo and ping intents
  * Run this agent first before running client-agent.ts
  */
 async function main() {
-  // Create an echo agent with shared registry
+  // Create an echo agent (no shared registry)
   const echoAgent = new UACPAgent({
     agentCard: {
       id: 'did:somnia:echo-agent-001',
@@ -19,7 +18,6 @@ async function main() {
     },
     port: 4000,
     logLevel: 'info',
-    registry: sharedRegistry,
   });
 
   // Handle echo intent - responds with the received message
