@@ -1,0 +1,7 @@
+{
+  "extends": "./sdk/tsconfig.json",
+  "files": [],
+  "references": [
+    { "path": "./sdk" }
+  ]
+}
